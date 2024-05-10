@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  background-color: #f6f6f9;
+}
+/* .hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: brightness(30%);
+
+} */
+
+.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .card-text {
+    font-size: 0.8rem; /* Smaller font size on smaller screens */
+  }
+}
+
+.card-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Example for a responsive grid */
+}
+
+
+.hero-video {
+  width: 100%; /* Full width */
+  height: 100vh; /* Full height, you can adjust as needed */
+  position: absolute; /* Allows absolute positioning inside */
+  overflow: hidden; /* Hides anything outside the bounds of the div */
+  z-index: -1;
+
+}
+
+.gradient-text {
+  background-image: linear-gradient(to right, #00ff7f, #32cdff, #add8e6); /* Green, Teal, Light Blue Gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  position: absolute; 
+  top: 0;
+  left: 0;
+  filter: brightness(50%);
+
+}
+
+.hero-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(30%);
+}
+.smooth-scroll {
+  transition: scroll-behavior 0.5s ease;
+}
+.hidden-navbar {
+  transform: translateY(-100%);
+}
+.fixed-navbar {
+  position: fixed;
+  transition: transform 0.3s ease-in-out;
+
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  backdrop-filter: blur(0.1px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.navbar-placeholder {
+  height: 96px; /* Adjust according to the actual height of your Navbar */
+}
+
+.custom-tag {
+  background-color: #00df9a !important;
+  color: white !important;
+}
+
+.MuiAutocomplete-popupIndicator {
+  color: white !important;
+}
+
+.MuiAutocomplete-option {
+  background-color: #36454f !important; /* Normal state */
+  color: white;
+}
+
+.MuiAutocomplete-option:hover {
+  background-color: #586975 !important; /* Hover state */
+}
+
+.MuiAutocomplete-option[data-focus="true"] {
+  background-color: #36454f !important; /* Focused state */
+}
+
+.MuiAutocomplete-option[aria-selected="true"] {
+  background-color: #586975 !important; /* Selected state */
+}
