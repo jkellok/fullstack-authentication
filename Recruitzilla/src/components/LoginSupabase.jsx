@@ -31,6 +31,59 @@ const Countries = () => {
   )
 }
 
+const LoginAnonymouslyButton = () => {
+  const anonymousSignIn = async () => {
+    const { data, error } = await supabase.auth.signInAnonymously()
+  }
+
+  return (
+    <button
+      onClick={anonymousSignIn}
+      className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+    >
+      Log in anonymously
+    </button>
+  )
+}
+
+// login with keycloak with supabase client library
+const LoginWithKeycloakButton = () => {
+  async function signInWithKeycloak() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'keycloak',
+      options: {
+        scopes: 'openid',
+        redirectTo: 'http://localhost:5173/login/supabase' // change later
+      },
+    })
+  }
+
+  return (
+    <button
+      onClick={signInWithKeycloak}
+      className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+    >
+      Log in with Keycloak
+    </button>
+  )
+
+}
+
+const SignOutButton = () => {
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut()
+  }
+
+  return (
+    <button
+      onClick={signOut}
+      className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+    >
+      sign out
+    </button>
+  )
+}
+
 const LoginSupabase = () => {
   const [session, setSession] = useState(null)
 
@@ -48,25 +101,13 @@ const LoginSupabase = () => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const anonymousSignIn = async () => {
-    const { data, error } = await supabase.auth.signInAnonymously()
-  }
-
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-  }
-
   if (!session) {
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         TEMPLATE LOGIN WITH SUPABASE
         <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
-        <button
-          onClick={anonymousSignIn}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          Log in anonymously
-        </button>
+        <LoginAnonymouslyButton />
+        <LoginWithKeycloakButton />
       </div>
     )
   }
@@ -74,12 +115,7 @@ const LoginSupabase = () => {
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
-        <button
-          onClick={signOut}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          sign out
-        </button>
+        <SignOutButton />
         <Countries />
       </div>
     )
