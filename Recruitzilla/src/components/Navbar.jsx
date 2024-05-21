@@ -4,6 +4,8 @@ import { Link as ScrollLink, Element } from "react-scroll";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import * as Scroll from "react-scroll";
 import { Link } from "react-router-dom";
+import LogoutButton from "./LogoutButton";
+import { useSession } from "../hooks/useSession";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -13,6 +15,7 @@ const Navbar = () => {
   const location = path.split("/")[1];
   const navigate = useNavigate();
   const scroller = Scroll.scroller;
+  const session = useSession()
 
   const handleNav = () => {
     setNav(!nav);
@@ -72,11 +75,18 @@ const Navbar = () => {
                     Contact
                   </button>
                 </ScrollLink>
-                <NavLink to="/login" spy={true} smooth={true}>
-                  <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
-                    Login{" "}
-                  </button>
-                </NavLink>
+                {session
+                  ?
+                  <NavLink to="/login" spy={true} smooth={true}>
+                    <LogoutButton />
+                  </NavLink>
+                  :
+                  <NavLink to="/login" spy={true} smooth={true}>
+                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
+                      Login{" "}
+                    </button>
+                  </NavLink>
+                }
               </ul>
             ) : (
               <ul className="hidden md:flex">
@@ -99,11 +109,18 @@ const Navbar = () => {
                 >
                   Contact
                 </button>
-                <NavLink to="/login" spy={true} smooth={true}>
-                  <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
-                    Login{" "}
-                  </button>
-                </NavLink>
+                {session
+                  ?
+                  <NavLink to="/login" spy={true} smooth={true}>
+                    <LogoutButton />
+                  </NavLink>
+                  :
+                  <NavLink to="/login" spy={true} smooth={true}>
+                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
+                      Login{" "}
+                    </button>
+                  </NavLink>
+                }
               </ul>
             )}
           </nav>
