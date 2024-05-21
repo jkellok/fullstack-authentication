@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import { useNavigate } from 'react-router-dom'
 
 // just an example, delete later
 const Countries = () => {
@@ -86,6 +87,7 @@ const SignOutButton = () => {
 
 const LoginSupabase = () => {
   const [session, setSession] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -103,11 +105,23 @@ const LoginSupabase = () => {
 
   if (!session) {
     return (
-      <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
-        TEMPLATE LOGIN WITH SUPABASE
-        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
-        <LoginAnonymouslyButton />
-        <LoginWithKeycloakButton />
+      <div>
+        <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
+          <div className="flex flex-col justify-center items-center w-1/2">
+            <div className="flex justify-center items-center">
+              <LoginAnonymouslyButton />
+              <LoginWithKeycloakButton />
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+              >
+                To previous Login page
+              </button>
+              <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -116,6 +130,13 @@ const LoginSupabase = () => {
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
         <SignOutButton />
+        <button
+          type="button"
+          onClick={() => navigate("/login")}
+          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+        >
+          To previous Login page
+        </button>
         <Countries />
       </div>
     )
