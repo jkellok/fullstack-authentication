@@ -23,7 +23,7 @@ NOTE: might not work in Docker/locally
     - Copy-paste Callback URL into KeyCloak’s Valid redirect URIs
         - Usually https://{your-supabase-url}.supabase.co/auth/v1/callback
 - Retrieve issuer from OpenID EndPoint configuration
-    - http://localhost:8080/realms/{my_realm_name}/.well-known/openid-configuration
+    - http://localhost:8080/realms/{realm-name}/.well-known/openid-configuration
     - Most likely in form {ip-address}/realms/{realm-name}
 - Obtain client secret
     - Credentials -> client secret
