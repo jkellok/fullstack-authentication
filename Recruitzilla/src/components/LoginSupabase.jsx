@@ -5,33 +5,6 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useNavigate } from 'react-router-dom'
 
-// just an example, delete later
-const Countries = () => {
-  const [countries, setCountries] = useState([])
-
-  useEffect(() => {
-    getCountries();
-  }, []);
-
-  async function getCountries() {
-    const { data } = await supabase.from("countries").select();
-    setCountries(data);
-  }
-
-  return (
-    <div>
-      <h2 className="text-[white] text-center font-bold ml-2">
-        Example data from Supabase
-      </h2>
-      <ul>
-        {countries.map((country) => (
-          <li key={country.name}>{country.name}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
 const LoginAnonymouslyButton = () => {
   const anonymousSignIn = async () => {
     const { data, error } = await supabase.auth.signInAnonymously()
@@ -137,7 +110,13 @@ const LoginSupabase = () => {
         >
           To previous Login page
         </button>
-        <Countries />
+        <button
+          type="button"
+          onClick={() => navigate("/testpage")}
+          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+        >
+          To TestPage with test data
+        </button>
       </div>
     )
   }
