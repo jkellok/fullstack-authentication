@@ -71,7 +71,6 @@ const RoleSelectionButton = ({ session }) => {
   // example data: show user name and role
   // click button to change role
   // update role and see the change
-  // then figure out how to add new user to users and assign role
 
   const [users, setUsers] = useState(initialUser)
   const userId = session.user.id
@@ -81,7 +80,6 @@ const RoleSelectionButton = ({ session }) => {
   }, []);
 
   async function getUsers() {
-    // could modify to only get their own data
     const { data, error } = await supabase
       .from("users")
       .select(`
@@ -89,13 +87,10 @@ const RoleSelectionButton = ({ session }) => {
         name,
         roles (name)
       `)
-    console.log("getUsers", data)
     setUsers(data)
   }
 
   const selectRole = async (role, userId) => {
-    console.log("selectrole role", role)
-    console.log("userid", userId)
     switch (role) {
       case "student":
         role = "2bb77715-6a01-431b-8ca5-19db119f5d67"
@@ -108,19 +103,12 @@ const RoleSelectionButton = ({ session }) => {
         role = "b7ad4189-308f-4b99-a9f6-c93ff0a270bb"
     }
 
-    // make sure policy is set that update is allowed
-    // should make so that user can update own data
-    // using (( SELECT (auth.uid() = users.id)) )
-    // should throw error if not allowed?
-    console.log("role selected", role)
+    // changes testuser public.users.role_id
     const { data, error } = await supabase
       .from("users")
       .update({ role_id: role })
-      .eq("id", userId)
-      //.eq("id", "131a26c5-7750-493a-ba42-44a000f33a3b")
-      //.eq("id", "09951f3f-cf81-446a-899a-1c13cdb95d94")
-      .select()
-    console.log("selectrole data", data)
+      //.eq("id", userId)
+      .eq("id", "09951f3f-cf81-446a-899a-1c13cdb95d94")
 
     getUsers()
   }
@@ -139,7 +127,7 @@ const RoleSelectionButton = ({ session }) => {
 
   return (
     <div className="bg-[#1e1f1f] flex flex-col justify-center items-center">
-      <h1>Select your role</h1>
+      <h1>Select testuser's role</h1>
       <div>
         <button
           type="button"
