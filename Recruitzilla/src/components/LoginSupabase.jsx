@@ -5,7 +5,6 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useNavigate } from 'react-router-dom'
 import { useSession } from "../hooks/useSession";
-import { getNativeSelectUtilityClasses } from "@mui/material";
 
 const LoginAnonymouslyButton = () => {
   const anonymousSignIn = async () => {
