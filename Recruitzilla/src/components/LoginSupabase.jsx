@@ -190,6 +190,13 @@ const LoginSupabase = () => {
         </button>
         <button
           type="button"
+          onClick={() => navigate("/firstlogin")}
+          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+        >
+          To First Login page
+        </button>
+        <button
+          type="button"
           onClick={() => navigate("/testpage")}
           className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
         >

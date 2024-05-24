@@ -11,6 +11,7 @@ import MainPortal from "./Pages/MainPortal";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginSupabase from './components/LoginSupabase';
 import TestPage from "./components/TestPage";
+import FirstLoginPage from "./components/FirstLoginPage"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/app/filter" element={<MainPortal />} />
           <Route path="/login/supabase" element={<LoginSupabase />} />
           <Route path="/testpage" element={<TestPage />} />
+          <Route path="/firstlogin" element={<FirstLoginPage />} />
         </Routes>
       </div>
     </BrowserRouter>
