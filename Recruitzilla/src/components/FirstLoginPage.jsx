@@ -11,19 +11,15 @@ const FirstLoginPage = () => {
   const navigate = useNavigate()
 
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [firstName, setFirstName] = useState(null)
-  const [lastName, setLastName] = useState(null)
-  const [role, setRole] = useState("student")
-  const [isNew, setIsNew] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const fullName = firstName + ' ' + lastName
+  const [role, setRole] = useState("student")
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     if(session) {
-      console.log("setting user id")
       setUserId(session.user.id)
-      console.log("user", session.user)
-      console.log("userid", session.user.id)
     }
   }, [session]);
 
@@ -46,24 +42,13 @@ const FirstLoginPage = () => {
 
   const sendDatatoSupabase = async () => {
     // send submitted data to supabase and set is_new to false
-/*     let role_id = 1
-
-    switch (role) {
-      case "student":
-        role_id = 2
-        break
-      case "recruiter":
-        role_id = 1
-        break
-    } */
-
     const { error } = await supabase
       .from("new_users")
       .update({ name: fullName, is_new: false, role_name: role })
       .eq('id', userId)
     if (error) console.error(error);
-    //set_claim(userId, 'userrole', role);
 
+    set_claim(userId, 'userrole', role);
     redirectUserAfterSubmit()
   }
 
@@ -81,21 +66,14 @@ const FirstLoginPage = () => {
     }
   };
 
-  const redirectUserAfterSubmit = () => {
+  const redirectUserAfterSubmit = async () => {
     // check if user is no longer new and redirect (or force logout)
-    const isUserNew = async () => {
-        const { data, error } = await supabase
-          .from("new_users")
-          .select("is_new")
-          .eq("id", userId)
+    const { data, error } = await supabase
+      .from("new_users")
+      .select("is_new")
+      .eq("id", userId)
 
-        console.log("data isnew", data)
-        const isNew = data[0].is_new
-        setIsNew(isNew)
-    }
-    isUserNew()
-
-    if(!isNew) {
+    if (!data[0].is_new) {
       console.log("user is no longer new!")
       navigate('/login/supabase')
     }

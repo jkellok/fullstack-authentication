@@ -5,30 +5,6 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useNavigate } from 'react-router-dom'
 import { useSession } from "../hooks/useSession";
-/*
-const RedirectNewUser = () => {
-  const navigate = useNavigate()
-
-  const getUserData = async () => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("is_new")
-
-    const isNew = data[0].is_new
-    if (isNew) {
-      navigate('/firstlogin')
-    }
-    //return isNew
-  }
-
-  getUserData()
-
-  return (
-    <div>
-      hello
-    </div>
-  )
-} */
 
 const LoginAnonymouslyButton = () => {
   const anonymousSignIn = async () => {
@@ -52,7 +28,7 @@ const LoginWithKeycloakButton = () => {
       provider: 'keycloak',
       options: {
         scopes: 'openid',
-        redirectTo: 'http://localhost:5173/login/supabase' // change later
+        redirectTo: 'http://localhost:5173/login/supabase' // change later for production
       },
     })
   }
