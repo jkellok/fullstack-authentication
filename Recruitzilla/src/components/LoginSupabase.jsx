@@ -177,12 +177,11 @@ const LoginSupabase = () => {
   const redirectNewUser = async () => {
     // check if is_new is true and redirect new user
     const { data, error } = await supabase
-      .from("profiles")
+      .from("new_users")
       .select("is_new")
       .eq("id", session.user.id)
 
     const isNew = data[0].is_new
-    console.log("isnew", isNew)
 
     if (isNew) {
       navigate('/firstlogin')
@@ -212,12 +211,12 @@ const LoginSupabase = () => {
     )
   }
   else {
+    console.log("user", session.user)
     redirectNewUser()
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
         {/* <RoleSelectionButton session={session} /> */}
-        <h1 className="text-white">Hello {session.user.user_metadata.full_name}</h1>
         <SignOutButton />
         <button
           type="button"

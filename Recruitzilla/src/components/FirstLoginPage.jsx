@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSession } from "../hooks/useSession";
 import { FormControlLabel, FormLabel, Radio, RadioGroup, FormControl } from "@mui/material"
 import { supabase } from "../supabaseClient";
@@ -11,11 +11,21 @@ const FirstLoginPage = () => {
   const navigate = useNavigate()
 
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
+  const [firstName, setFirstName] = useState(null)
+  const [lastName, setLastName] = useState(null)
   const [role, setRole] = useState("student")
   const [isNew, setIsNew] = useState(false)
   const fullName = firstName + ' ' + lastName
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    if(session) {
+      console.log("setting user id")
+      setUserId(session.user.id)
+      console.log("user", session.user)
+      console.log("userid", session.user.id)
+    }
+  }, [session]);
 
   const handleSubmit = async (e) => {
     // either force logout immediately
@@ -36,23 +46,50 @@ const FirstLoginPage = () => {
 
   const sendDatatoSupabase = async () => {
     // send submitted data to supabase and set is_new to false
-    // RLS policy update based on email
-    // doesn't send role yet
+/*     let role_id = 1
+
+    switch (role) {
+      case "student":
+        role_id = 2
+        break
+      case "recruiter":
+        role_id = 1
+        break
+    } */
+
     const { error } = await supabase
-      .from("profiles")
-      .update({ full_name: fullName, is_new: false })
-      .eq('email', session.user.email)
+      .from("new_users")
+      .update({ name: fullName, is_new: false, role_name: role })
+      .eq('id', userId)
+    if (error) console.error(error);
+    //set_claim(userId, 'userrole', role);
 
     redirectUserAfterSubmit()
   }
+
+  const set_claim = async (uid, claim, value) => {
+    try {
+      console.log('uid:', uid);
+      console.log('claim:', claim);
+      console.log('value:', value);
+      const { data, error } = await supabase
+        .rpc('set_claim', { uid, claim, value });
+      if (error) throw error;
+      return { data, error };
+    } catch (error) {
+      console.error('Error in set_claim:', error);
+    }
+  };
 
   const redirectUserAfterSubmit = () => {
     // check if user is no longer new and redirect (or force logout)
     const isUserNew = async () => {
         const { data, error } = await supabase
-          .from("profiles")
+          .from("new_users")
           .select("is_new")
+          .eq("id", userId)
 
+        console.log("data isnew", data)
         const isNew = data[0].is_new
         setIsNew(isNew)
     }
@@ -88,6 +125,7 @@ const FirstLoginPage = () => {
               First name
             </label>
             <input
+              required
               type="text"
               placeholder="First name"
               id="firstname"
@@ -101,6 +139,7 @@ const FirstLoginPage = () => {
               Last name
             </label>
             <input
+              required
               type="text"
               placeholder="Last name"
               id="lastname"
@@ -131,9 +170,6 @@ const FirstLoginPage = () => {
               Submit
             </button>
           </form>
-          <p>
-            (Please login again to apply the changes)
-          </p>
         </div>
       </div>
     </div>
