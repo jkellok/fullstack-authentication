@@ -64,20 +64,14 @@ const initialUser = [
 ]
 
 const RoleSelectionButton = ({ session }) => {
-  // should be shown to user who has no role yet / first time login
-  // maybe role could be changed in their own profile?
-
-  // example data: show user name and role
-  // click button to change role
-  // update role and see the change
-
-  const [users, setUsers] = useState(initialUser)
-  const userId = session.user.id
+  const [users, setUsers] = useState([]);
+  const userId = session.user.id;
 
   useEffect(() => {
     getUsers();
   }, []);
 
+  //Supabase doesn't have name by default using this and testuser for testing purposes 
   async function getUsers() {
     const { data, error } = await supabase
       .from("users")
@@ -85,32 +79,35 @@ const RoleSelectionButton = ({ session }) => {
         id,
         name,
         roles (name)
-      `)
-    setUsers(data)
+      `);
+    if (error) console.error(error);
+    setUsers(data);
   }
 
   const selectRole = async (role, userId) => {
-    switch (role) {
-      case "student":
-        role = "2bb77715-6a01-431b-8ca5-19db119f5d67"
-        break
-      case "recruiter":
-        role = "b7ad4189-308f-4b99-a9f6-c93ff0a270bb"
-        break
-      default:
-        // recruiter role as default
-        role = "b7ad4189-308f-4b99-a9f6-c93ff0a270bb"
-    }
-
-    // changes testuser public.users.role_id
     const { data, error } = await supabase
-      .from("users")
-      .update({ role_id: role })
-      //.eq("id", userId)
-      .eq("id", "09951f3f-cf81-446a-899a-1c13cdb95d94")
+      .from("new_users")
+      .update({ role_name: role }) 
+      .eq("id", userId);
+    if (error) console.error(error);
 
-    getUsers()
+    getUsers();
+    set_claim(userId, 'userrole', role);
   }
+
+  const set_claim = async (uid, claim, value) => {
+    try {
+      console.log('uid:', uid);
+      console.log('claim:', claim);
+      console.log('value:', value);
+      const { data, error } = await supabase
+        .rpc('set_claim', { uid, claim, value });
+      if (error) throw error;
+      return { data, error };
+    } catch (error) {
+      console.error('Error in set_claim:', error);
+    }
+  };
 
   const DisplayUserAndRole = () => {
     return (
