@@ -5,30 +5,6 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useNavigate } from 'react-router-dom'
 import { useSession } from "../hooks/useSession";
-/*
-const RedirectNewUser = () => {
-  const navigate = useNavigate()
-
-  const getUserData = async () => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("is_new")
-
-    const isNew = data[0].is_new
-    if (isNew) {
-      navigate('/firstlogin')
-    }
-    //return isNew
-  }
-
-  getUserData()
-
-  return (
-    <div>
-      hello
-    </div>
-  )
-} */
 
 const LoginAnonymouslyButton = () => {
   const anonymousSignIn = async () => {
@@ -52,7 +28,7 @@ const LoginWithKeycloakButton = () => {
       provider: 'keycloak',
       options: {
         scopes: 'openid',
-        redirectTo: 'http://localhost:5173/login/supabase' // change later
+        redirectTo: 'http://localhost:5173/login/supabase' // change later for production
       },
     })
   }
@@ -83,93 +59,6 @@ const SignOutButton = () => {
   )
 }
 
-const initialUser = [
-  { id: 0, name: 'initial name', roles: { name: 'initial role' } }
-]
-
-const RoleSelectionButton = ({ session }) => {
-  const [users, setUsers] = useState([]);
-  const userId = session.user.id;
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  //Supabase doesn't have name by default using this and testuser for testing purposes 
-  async function getUsers() {
-    const { data, error } = await supabase
-      .from("users")
-      .select(`
-        id,
-        name,
-        roles (name)
-      `);
-    if (error) console.error(error);
-    setUsers(data);
-  }
-
-  const selectRole = async (role, userId) => {
-    const { data, error } = await supabase
-      .from("new_users")
-      .update({ role_name: role }) 
-      .eq("id", userId);
-    if (error) console.error(error);
-
-    getUsers();
-    set_claim(userId, 'userrole', role);
-  }
-
-  const set_claim = async (uid, claim, value) => {
-    try {
-      console.log('uid:', uid);
-      console.log('claim:', claim);
-      console.log('value:', value);
-      const { data, error } = await supabase
-        .rpc('set_claim', { uid, claim, value });
-      if (error) throw error;
-      return { data, error };
-    } catch (error) {
-      console.error('Error in set_claim:', error);
-    }
-  };
-
-  const DisplayUserAndRole = () => {
-    return (
-      <div>
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>{user.name}, Role: {user.roles.name}</li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
-  return (
-    <div className="bg-[#1e1f1f] flex flex-col justify-center items-center">
-      <h1>Select testuser's role</h1>
-      <div>
-        <button
-          type="button"
-          onClick={() => selectRole("recruiter", userId)}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          Recruiter
-        </button>
-        {' '}
-        <button
-          type="button"
-          onClick={() => selectRole("student", userId)}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          Student
-        </button>
-      </div>
-      <DisplayUserAndRole />
-    </div>
-  )
-}
-
 const LoginSupabase = () => {
   const session = useSession()
   const navigate = useNavigate()
@@ -177,14 +66,11 @@ const LoginSupabase = () => {
   const redirectNewUser = async () => {
     // check if is_new is true and redirect new user
     const { data, error } = await supabase
-      .from("profiles")
+      .from("new_users")
       .select("is_new")
       .eq("id", session.user.id)
 
-    const isNew = data[0].is_new
-    console.log("isnew", isNew)
-
-    if (isNew) {
+    if (data[0].is_new) {
       navigate('/firstlogin')
     }
   }
@@ -212,12 +98,11 @@ const LoginSupabase = () => {
     )
   }
   else {
+    console.log("user", session.user)
     redirectNewUser()
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
-        {/* <RoleSelectionButton session={session} /> */}
-        <h1 className="text-white">Hello {session.user.user_metadata.full_name}</h1>
         <SignOutButton />
         <button
           type="button"
