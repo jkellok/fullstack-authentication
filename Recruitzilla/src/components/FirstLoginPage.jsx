@@ -1,47 +1,71 @@
 import React from "react";
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useSession } from "../hooks/useSession";
 import { FormControlLabel, FormLabel, Radio, RadioGroup, FormControl } from "@mui/material"
-import { Radio as Rad, Typography } from '@material-tailwind/react'
+import { supabase } from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 
 const FirstLoginPage = () => {
   const session = useSession()
-  // session.user.app_metadata
-  //console.log(session)
-
-  // stuff here
-  // do we need to figure out how to show this on first login?
-  // if user_role is unassigned or something
-  // check from session token
-
-  // select role
-  // give other info like first name, last name, email
-  // whatever is needed in our database
+  const navigate = useNavigate()
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
-  const [role, setRole] = useState("recruiter")
+  const [role, setRole] = useState("student")
+  const [isNew, setIsNew] = useState(false)
+  const fullName = firstName + ' ' + lastName
 
   const handleSubmit = async (e) => {
     // either force logout immediately
+    // if we want role info from token
     // or notify that info has been submitted successfully
     // flowing notification bar?
     // and user has to press logout
     // could implement logging out in 10s?
     e.preventDefault();
-    console.log(e)
     if (isSubmitted) {
       console.log("successfully submitted!")
-      console.log("firstname:", firstName, "\nlastname:", lastName, "\nrole:", role)
+      console.log("firstname:", firstName, "\nlastname:", lastName, "\nrole:", role, "\nfullname:", fullName)
+      sendDatatoSupabase()
     } else {
       console.log("isSubmitted is false", isSubmitted)
     }
   }
 
+  const sendDatatoSupabase = async () => {
+    // send submitted data to supabase and set is_new to false
+    // RLS policy update based on email
+    // doesn't send role yet
+    const { error } = await supabase
+      .from("profiles")
+      .update({ full_name: fullName, is_new: false })
+      .eq('email', session.user.email)
+
+    redirectUserAfterSubmit()
+  }
+
+  const redirectUserAfterSubmit = () => {
+    // check if user is no longer new and redirect (or force logout)
+    const isUserNew = async () => {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("is_new")
+
+        const isNew = data[0].is_new
+        setIsNew(isNew)
+    }
+    isUserNew()
+
+    if(!isNew) {
+      console.log("user is no longer new!")
+      navigate('/login/supabase')
+    }
+  }
+
   const handleState = () => {
-    setIsSubmitted(!isSubmitted)
+    setIsSubmitted(true)
   }
 
   const handleRadioChange = (e) => {
@@ -50,62 +74,55 @@ const FirstLoginPage = () => {
 
   return (
     <div className="bg-[#1e1f1f]">
-      <h2 className='text-2xl font-bold text-center py-8'>
-        First login page
-      </h2>
-      <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
-        <div className="bg-[grey] flex flex-col justify-center items-center w-1/2">
+      <div className="text-black bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
+        <div className="bg-[#f0f0f0] shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <form
-            className="mt-8 flex flex-col justify-center items-center"
+            className="text-black mt-8 flex flex-col justify-center items-center"
             onSubmit={handleSubmit}
           >
-            First name
+            <h2 className="text-xl font-bold text-center mb-6">
+              Please fill in your details
+            </h2>
+            <div className="mb-4">
+            <label className="block mb-2" htmlFor="firstname">
+              First name
+            </label>
             <input
               type="text"
               placeholder="First name"
+              id="firstname"
               className="w-full p-2 border border-gray-300 rounded text-black"
               defaultValue={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
-            Last name
+            </div>
+            <div className="mb-6">
+            <label className="block mb-2" htmlFor="lastname">
+              Last name
+            </label>
             <input
               type="text"
               placeholder="Last name"
-              className="w-full p-2 border border-gray-300 rounded mt-4 text-black"
+              id="lastname"
+              className="w-full p-2 border border-gray-300 rounded text-black"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
-            Select your Role
-            <div className="">
-              <input
-              type="radio"
-              value="student"
-              id="radioStudent"
-              checked={ role === "student" }
-              onChange={(handleRadioChange)}
-              />
-              <label
-                className=""
-                htmlFor="radioStudent"
-              >
-                Student
-              </label>
             </div>
-            <div className="">
-              <input
-              type="radio"
-              value="recruiter"
-              id="radioRecruiter"
-              checked={ role === "recruiter" }
-              onChange={(handleRadioChange)}
-              />
-              <label
-                className=""
-                htmlFor="radioRecruiter"
+            <FormControl>
+              <FormLabel style={{color: 'black'}}>
+              Select your role
+              </FormLabel>
+              <RadioGroup
+                row
+                name="controlled-radio-buttons-group"
+                value={role}
+                onChange={handleRadioChange}
               >
-                Recruiter
-              </label>
-            </div>
+              <FormControlLabel value="student" control={<Radio style={{color: "black"}} />} label="Student" />
+              <FormControlLabel value="recruiter" control={<Radio style={{color: "black"}} />} label="Recruiter" />
+              </RadioGroup>
+            </FormControl>
             <button
               type="submit"
               className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00B27B] active:bg-[#009265]"
@@ -117,60 +134,6 @@ const FirstLoginPage = () => {
           <p>
             (Please login again to apply the changes)
           </p>
-
-          <span>&nbsp;</span>
-          <p>Testing MUI library</p>
-          <FormControl>
-            <FormLabel style={{color: 'white'}}>
-              Select your role
-            </FormLabel>
-            <RadioGroup
-              row
-              name="controlled-radio-buttons-group"
-              value={role}
-              onChange={handleRadioChange}
-            >
-              <FormControlLabel value="student" control={<Radio style={{color: "white"}} />} label="Student" />
-              <FormControlLabel value="recruiter" control={<Radio style={{color: "white"}} />} label="Recruiter" />
-            </RadioGroup>
-          </FormControl>
-
-          <p>Testing Tailwind</p>
-          <div className="flex flex-col gap-8">
-            <Rad
-              name="description"
-              label={
-                <div>
-                <Typography color="blue-gray" className="font-medium">
-                  Student
-                </Typography>
-                <Typography variant="small" color="gray" className="font-normal">
-                  Possible description here.
-                </Typography>
-                </div>
-              }
-              containerProps={{
-                className: "-mt-5",
-              }}
-            />
-            <Rad
-              name="description"
-              defaultChecked
-              label={
-                <div>
-                <Typography color="blue-gray" className="font-medium">
-                  Recruiter
-                </Typography>
-                <Typography variant="small" color="gray" className="font-normal">
-                  Possible description here.
-                </Typography>
-                </div>
-              }
-              containerProps={{
-                className: "-mt-5",
-              }}
-            />
-          </div>
         </div>
       </div>
     </div>
