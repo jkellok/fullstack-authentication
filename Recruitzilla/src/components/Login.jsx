@@ -39,6 +39,13 @@ const LoginPage = () => {
     <div>
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <div className="flex flex-col justify-center items-center w-1/2">
+          <button
+            type="button"
+            onClick={() => navigate("/login/supabase")}
+            className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
+          >
+            To Login Supabase page
+          </button>
           <div className="flex justify-center items-center">
             <h2 className="text-[white] text-center text-4xl font-bold ml-2">
               {isLogin ? "Login" : "Signup"}
