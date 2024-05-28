@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "name": "Daenerys Targaryen",
+      "email": "daynerys.targaryen@dragon.com",
+      "role": "recruiter"
+    },
+    {
+      "id": 2,
+      "name": "Arya Stark",
+      "email": "arya.stark@wolf.com",
+      "role": "student"
+    },
+    {
+      "id": 3,
+      "name": "John Snow",
+      "email": "john.snow@dragon.com",
+      "role": "admin"
+    }
+  ]

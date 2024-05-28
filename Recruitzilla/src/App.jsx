@@ -10,6 +10,7 @@ import Card from "./components/Card/Card";
 import MainPortal from "./Pages/MainPortal";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginSupabase from './components/LoginSupabase';
+import AdminConsole from './components/AdminConsole';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/app/filter" element={<MainPortal />} />
           <Route path="/login/supabase" element={<LoginSupabase />} />
+          <Route path="/admin-console" element={<AdminConsole />} />
         </Routes>
       </div>
     </BrowserRouter>
