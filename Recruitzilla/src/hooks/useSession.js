@@ -1,3 +1,5 @@
+//implemented in AuthContext hopefully now
+
 import { useEffect, useState } from "react"
 import { supabase } from "../supabaseClient"
 
