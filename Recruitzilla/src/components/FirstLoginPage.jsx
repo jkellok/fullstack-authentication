@@ -77,7 +77,6 @@ const FirstLoginPage = () => {
     if (!data[0].is_new) {
       notification("Logging out...")
       setTimeout( async () => {
-        //navigate('/login/supabase')
         const { error } = await supabase.auth.signOut()
         navigate('/login/supabase')
       }, 4000)
