@@ -4,7 +4,8 @@ import { useSession } from "../hooks/useSession";
 import { FormControlLabel, FormLabel, Radio, RadioGroup, FormControl } from "@mui/material"
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const FirstLoginPage = () => {
   const session = useSession()
@@ -23,16 +24,16 @@ const FirstLoginPage = () => {
     }
   }, [session]);
 
+  const notification = (message, type) => {
+    // type can be success, error, info, warning
+    // if no type is defined, do a default toast
+    type ? toast[type](message) : toast(message)
+  }
+
   const handleSubmit = async (e) => {
-    // either force logout immediately
-    // if we want role info from token
-    // or notify that info has been submitted successfully
-    // flowing notification bar?
-    // and user has to press logout
-    // could implement logging out in 10s?
     e.preventDefault();
     if (isSubmitted) {
-      console.log("successfully submitted!")
+      notification("Successfully submitted!", "success")
       console.log("firstname:", firstName, "\nlastname:", lastName, "\nrole:", role, "\nfullname:", fullName)
       sendDatatoSupabase()
     } else {
@@ -67,15 +68,18 @@ const FirstLoginPage = () => {
   };
 
   const redirectUserAfterSubmit = async () => {
-    // check if user is no longer new and redirect (or force logout)
+    // check if user is no longer new and logout and redirect
     const { data, error } = await supabase
       .from("new_users")
       .select("is_new")
       .eq("id", userId)
 
     if (!data[0].is_new) {
-      console.log("user is no longer new!")
-      navigate('/login/supabase')
+      notification("Logging out...")
+      setTimeout( async () => {
+        const { error } = await supabase.auth.signOut()
+        navigate('/login/supabase')
+      }, 4000)
     }
   }
 
@@ -147,9 +151,11 @@ const FirstLoginPage = () => {
             >
               Submit
             </button>
+            <p>Please login again to apply changes</p>
           </form>
         </div>
       </div>
+      <ToastContainer autoClose={4000} />
     </div>
   )
 }
