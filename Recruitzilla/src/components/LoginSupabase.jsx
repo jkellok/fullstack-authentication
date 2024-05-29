@@ -2,9 +2,20 @@ import React from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext"; 
+import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
 
+const Button = ({ value, onClick }) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black mx-1"
+    >
+      {value}
+    </button>
+  )
+}
 
 const LoginSupabase = () => {
   const {
@@ -16,31 +27,31 @@ const LoginSupabase = () => {
   } = useAuth();
   const navigate = useNavigate();
 
+  const handleClick = path => {
+    navigate(path)
+  }
+
   if (!session) {
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <div className="flex flex-col justify-center items-center w-1/2">
           <div className="flex justify-center items-center">
-            <button
-              onClick={loginAnonymously}
-              className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-            >
-              Log in anonymously
-            </button>
-            <button
-              onClick={loginWithKeycloak}
-              className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-            >
-              Log in with Keycloak
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate("/login")}
-              className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-            >
-              To previous Login page
-            </button>
-            <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
+            <Button value="Log in anonymously" onClick={loginAnonymously} />
+            <Button value="Log in with Keycloak" onClick={loginWithKeycloak} />
+            <Button value="To previous Login page" onClick={() => handleClick("/login")} />
+            <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-1/2 flex flex-col justify-center items-center">
+              Log in with Supabase
+              <Auth
+                supabaseClient={supabase}
+                appearance={{
+                  theme: ThemeSupa,
+                  style: {
+                    button: { color: 'black' }
+                  }
+                }}
+                providers={['google', 'github', 'linkedin']}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -50,33 +61,10 @@ const LoginSupabase = () => {
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
-        <button
-          onClick={logout}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          Sign out
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/login")}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          To previous Login page
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/firstlogin")}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          To First Login page
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/testpage")}
-          className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black"
-        >
-          To TestPage with test data
-        </button>
+        <Button value="Log out" onClick={logout} />
+        <Button value="To previous Login page" onClick={() => handleClick("/login")} />
+        <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
+        <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
       </div>
     );
   }
