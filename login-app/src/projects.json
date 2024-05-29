@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Recruitzilla on localhost (port 5173)",
+    "url": "http://localhost:5173"
+  },
+  {
+    "id": 2,
+    "name": "Authzilla on Pouta",
+    "url": "https://www.authzilla.ilab.fi/"
+  }
+]
