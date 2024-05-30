@@ -14,8 +14,8 @@ const Button = ({ value, onClick }) => {
     >
       {value}
     </button>
-  )
-}
+  );
+};
 
 const LoginSupabase = () => {
   const {
@@ -27,9 +27,9 @@ const LoginSupabase = () => {
   } = useAuth();
   const navigate = useNavigate();
 
-  const handleClick = path => {
-    navigate(path)
-  }
+  const handleClick = (path) => {
+    navigate(path);
+  };
 
   if (!session) {
     return (
@@ -38,7 +38,10 @@ const LoginSupabase = () => {
           <div className="flex justify-center items-center">
             <Button value="Log in anonymously" onClick={loginAnonymously} />
             <Button value="Log in with Keycloak" onClick={loginWithKeycloak} />
-            <Button value="To previous Login page" onClick={() => handleClick("/login")} />
+            <Button
+              value="To previous Login page"
+              onClick={() => handleClick("/login")}
+            />
             <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-1/2 flex flex-col justify-center items-center">
               Log in with Supabase
               <Auth
@@ -46,10 +49,10 @@ const LoginSupabase = () => {
                 appearance={{
                   theme: ThemeSupa,
                   style: {
-                    button: { color: 'black' }
-                  }
+                    button: { color: "black" },
+                  },
                 }}
-                providers={['google', 'github', 'linkedin']}
+                providers={["google", "github", "linkedin"]}
               />
             </div>
           </div>
@@ -62,9 +65,18 @@ const LoginSupabase = () => {
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
         <Button value="Log out" onClick={logout} />
-        <Button value="To previous Login page" onClick={() => handleClick("/login")} />
-        <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
-        <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
+        <Button
+          value="To previous Login page"
+          onClick={() => handleClick("/login")}
+        />
+        <Button
+          value="To First Login Form"
+          onClick={() => handleClick("/firstlogin")}
+        />
+        <Button
+          value="To TestPage with test data"
+          onClick={() => handleClick("/testpage")}
+        />
       </div>
     );
   }
