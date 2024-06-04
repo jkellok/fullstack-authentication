@@ -61,7 +61,7 @@ const LoginSupabase = () => {
     navigate(path)
   }
 
-  //console.log("session", session)
+  console.log("session", session)
 
   if (!session) {
     return (
