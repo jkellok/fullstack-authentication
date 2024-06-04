@@ -5,6 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getSession = async () => {
@@ -12,13 +14,32 @@ export const AuthProvider = ({ children }) => {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
+      if (session) {
+        const { data, error } = await supabase.rpc("get_my_claims", {});
+        if (error) {
+          console.error("Error fetching role:", error);
+        } else {
+          setRole(data.userrole);
+        }
+      }
+      setLoading(false);
     };
 
     getSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setSession(session);
+        if (session) {
+          const { data, error } = await supabase.rpc("get_my_claims", {});
+          if (error) {
+            console.error("Error fetching role:", error);
+          } else {
+            setRole(data.userrole);
+          }
+        } else {
+          setRole(null);
+        }
       }
     );
 
@@ -63,6 +84,8 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         session,
+        role,
+        loading,
         loginWithKeycloak,
         loginAnonymously,
         logout,
