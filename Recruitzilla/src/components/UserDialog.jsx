@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, C
 
 const UserDialog = ({ open, user, courses, onClose, onSave }) => {
   const [formData, setFormData] = useState({
+    id: user?.id || "",
     name: "",
     email: "",
     skills: [],
@@ -14,15 +15,17 @@ const UserDialog = ({ open, user, courses, onClose, onSave }) => {
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        skills: user.skills || [],
-        courses: user.list_of_courses || [],
-        graduationYear: user.expected_graduate_year || "",
-        averageGrade: user.average_grade || ""
+        id: user?.id || "",
+        name: user?.name || "",
+        email: user?.email || "",
+        skills: user?.skills || [],
+        courses: user?.list_of_courses || [],
+        graduationYear: user?.expected_graduate_year || "",
+        averageGrade: user?.average_grade || ""
       });
     } else {
       setFormData({
+        id: "",
         name: "",
         email: "",
         skills: [],
