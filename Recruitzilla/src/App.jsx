@@ -1,38 +1,106 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./components/context/AuthContext"
-import Hero from "./components/Hero";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./components/context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
-import Analytics from "./components/Analytics";
-import Newsletter from "./components/Company";
 import LandingPage from "./components/LandingPage";
-import Footer from "./components/Footer";
 import Login from "./components/Login";
-import Card from "./components/Card/Card";
 import MainPortal from "./Pages/MainPortal";
 import LoginSupabase from "./components/LoginSupabase";
 import AdminConsole from "./components/AdminConsole";
 import TestPage from "./components/TestPage";
 import FirstLoginPage from "./components/FirstLoginPage";
+import StudentTest from "./components/StudentTest";
+import StudentDashboard from "./components/StudentDashboard";
+import StudentConsole from "./components/StudentConsole";
 
 function App() {
+  const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    // Use mock data for testing
+    const mockStudents = [
+      {
+        name: "John Doe",
+        country: "USA",
+        email: "john.doe@example.com",
+        phoneNumber: "123-456-7890",
+        bio: "A passionate student.",
+        languages: ["English", "Spanish"],
+        skills: ["Java", "React"],
+        expected_graduate_year: 2023,
+        courses: ["Mathematics 1", "Programming Language 1"],
+        averageGrade: 4.2
+      },
+      // Add more mock student data
+    ];
+    const mockCourses = [
+      // Add mock courses data
+    ];
+    const mockSchedule = [
+      // Add mock schedule data
+    ];
+    const mockNotifications = [
+      // Add mock notifications data
+    ];
+
+    setStudents(mockStudents);
+    setCourses(mockCourses);
+    setSchedule(mockSchedule);
+    setNotifications(mockNotifications);
+  }, []);
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <div>
-          <Navbar />
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <main>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/app/filter" element={<MainPortal />} />
             <Route path="/login/supabase" element={<LoginSupabase />} />
-            <Route path="/admin-console" element={<AdminConsole />} />
+            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+              <Route path="/admin-console" element={<AdminConsole />} />
+            </Route>
             <Route path="/testpage" element={<TestPage />} />
             <Route path="/firstlogin" element={<FirstLoginPage />} />
+            <Route
+              element={<ProtectedRoute allowedRoles={["student", "admin"]} />}
+            >
+              <Route path="/studenttest" element={<StudentTest />} />
+            </Route>
+            <Route
+              element={<ProtectedRoute allowedRoles={["student", "admin"]} />}
+            >
+              <Route path="/student-console" element={
+                <StudentDashboard
+                  students={students}
+                  courses={courses}
+                  schedule={schedule}
+                  notifications={notifications}
+                />
+              } />
+            </Route>
+            <Route
+              element={<ProtectedRoute allowedRoles={["student", "admin"]} />}
+            >
+              <Route path="/student-dashboard" element={
+                <StudentConsole
+                  students={students}
+                  courses={courses}
+                  schedule={schedule}
+                />
+              } />
+            </Route>
+            <Route path="*" element={<Navigate to="/app/filter" />} />
           </Routes>
-        </div>
-      </AuthProvider>
-    </BrowserRouter>
+        </main>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
