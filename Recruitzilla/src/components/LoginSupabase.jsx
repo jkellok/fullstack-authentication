@@ -5,124 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
 
-const UserIdentities = () => {
-  // use updateUser to update email, phone, password for authenticated user
-  const [newEmail, setNewEmail] = useState('')
-  const [newPhone, setNewPhone] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-
-  // sends "confirm email change" email to new email address
-  const updateEmail = async () => {
-    const { data, error } = await supabase.auth.updateUser({
-      email: newEmail,
-      options: {
-        emailRedirectTo: 'http://localhost:5173/login/supabase'
-      }
-    })
-    if (error) console.log("Error:", error.message);
-    console.log("data", data)
-  }
-  // sends OTP to new phone number
-  const updatePhone = async () => {
-    const { data, error } = await supabase.auth.updateUser({
-      phone: newPhone
-    })
-    if (error) console.log("Error:", error.message);
-    console.log("data", data)
-  }
-  const updatePassword = async () => {
-    const { data, error } = await supabase.auth.updateUser({
-      password: newPassword
-    })
-    if (error) console.log("Error:", error.message);
-    console.log("data", data)
-  }
-
-  // requires supabase linked auths
-  const getIdentities = async () => {
-    const { data, error } = await supabase.auth.getUserIdentities()
-    console.log("retrieved identities:", data)
-  }
-  const linkIdentity = async () => {
-    // links an oauth identity to an existing user
-    // Enable Manual Linking must be enabled in Supabase auth settings
-    // if run in browser, user is automatically redirected to returned URL
-    const { data, error } = await supabase.auth.linkIdentity({
-      provider: 'github'
-    })
-  }
-  const unlinkIdentity = async () => {
-    // Enable Manual Linking must be enabled
-    const identities = await supabase.auth.getUserIdentities()
-    const googleIdentity = identities.find(
-      identity => identity.provider === 'google'
-    )
-    const keycloakIdentity = identities.find(
-      identity = identity.provider === 'keycloak'
-    )
-    const { error } = await supabase.auth.unlinkIdentity(googleIdentity)
-  }
-
-  return (
-    <div className="bg-[#1e1f1f]">
-      <div className="text-black bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
-        <div className="bg-[#f0f0f0] shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <form
-            className="text-black mt-8 flex flex-col justify-center items-center"
-          >
-            <h2 className="text-xl font-bold text-center mb-6">
-              Update your details
-            </h2>
-            <div className="mb-4">
-            <label className="block mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              required
-              type="text"
-              placeholder="New email"
-              id="email"
-              className="w-full p-2 border border-gray-300 rounded text-black"
-              defaultValue={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-            />
-            </div>
-            <div className="mb-6">
-            <label className="block mb-2" htmlFor="phone">
-              Phone
-            </label>
-            <input
-              required
-              type="text"
-              placeholder="New phone"
-              id="phone"
-              className="w-full p-2 border border-gray-300 rounded text-black"
-              value={newPhone}
-              onChange={(e) => setNewPhone(e.target.value)}
-            />
-            <label className="block mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              required
-              type="password"
-              placeholder="New Password"
-              id="password"
-              className="w-full p-2 border border-gray-300 rounded text-black"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-        </form>
-        <Button value="Change email" onClick={updateEmail} />
-        <Button value="Change phone" onClick={updatePhone} />
-        <Button value="Change password" onClick={updatePassword} />
-      </div>
-    </div>
-  </div>
-  )
-}
-
 const Button = ({ value, onClick }) => {
   return (
     <button
@@ -188,7 +70,7 @@ const LoginSupabase = () => {
         <Button value="To previous Login page" onClick={() => handleClick("/login")} />
         <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
         <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
-        <UserIdentities />
+        <Button value="To User Management" onClick={() => handleClick("/usermanagement")} />
       </div>
     );
   }

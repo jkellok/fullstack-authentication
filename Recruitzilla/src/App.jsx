@@ -10,6 +10,7 @@ import LoginSupabase from "./components/LoginSupabase";
 import AdminConsole from "./components/AdminConsole";
 import TestPage from "./components/TestPage";
 import FirstLoginPage from "./components/FirstLoginPage";
+import UserManagement from "./components/UserManagement";
 import StudentTest from "./components/StudentTest";
 import StudentDashboard from "./components/StudentDashboard";
 import StudentConsole from "./components/StudentConsole";
@@ -68,6 +69,7 @@ function App() {
             </Route>
             <Route path="/testpage" element={<TestPage />} />
             <Route path="/firstlogin" element={<FirstLoginPage />} />
+            <Route path="/usermanagement" element={<UserManagement />} />
             <Route
               element={<ProtectedRoute allowedRoles={["student", "admin"]} />}
             >
