@@ -331,8 +331,10 @@ const AdminConsole = () => {
     }
   };
 
+
+
   return (
-    <Container style={{ marginTop: "50px" }}>
+    <><p>testi</p><Container style={{ marginTop: "50px" }}>
       <Paper style={{ padding: "40px", margin: "50px 50px 0 50px" }}>
         <Tabs
           value={tabValue}
@@ -353,8 +355,7 @@ const AdminConsole = () => {
                 fullWidth
                 value={userSearchQuery}
                 onChange={handleUserSearchChange}
-                style={{ marginBottom: "20px" }}
-              />
+                style={{ marginBottom: "20px" }} />
               <button
                 className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00B27B] text-bold hover:bg-[#00B27B]"
                 onClick={handleAddUser}
@@ -364,8 +365,7 @@ const AdminConsole = () => {
               <UserTable
                 users={filteredUsers}
                 onEditUser={handleEditUser}
-                onDeleteUser={handleDeleteUser}
-              />
+                onDeleteUser={handleDeleteUser} />
             </Grid>
           </Grid>
         </TabPanel>
@@ -374,8 +374,7 @@ const AdminConsole = () => {
             <Grid item xs={12} md={4}>
               <FilterPanel
                 onFilterChange={handleFilterChange}
-                courses={courses}
-              />
+                courses={courses} />
             </Grid>
             <Grid item xs={12} md={8}>
               <TextField
@@ -384,14 +383,12 @@ const AdminConsole = () => {
                 fullWidth
                 value={studentSearchQuery}
                 onChange={handleStudentSearchChange}
-                style={{ marginBottom: "20px" }}
-              />
+                style={{ marginBottom: "20px" }} />
               <StudentTable
                 students={filteredStudents}
                 courses={courses}
                 onEditStudent={handleEditStudent}
-                onDeleteStudent={handleDeleteStudent}
-              />
+                onDeleteStudent={handleDeleteStudent} />
             </Grid>
           </Grid>
         </TabPanel>
@@ -404,8 +401,7 @@ const AdminConsole = () => {
                 fullWidth
                 value={courseSearchQuery}
                 onChange={handleCourseSearchChange}
-                style={{ marginBottom: "20px" }}
-              />
+                style={{ marginBottom: "20px" }} />
               <button
                 className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00B27B] text-bold hover:bg-[#00B27B]"
                 onClick={handleAddCourse}
@@ -415,8 +411,7 @@ const AdminConsole = () => {
               <CourseTable
                 courses={filteredCourses}
                 onEditCourse={handleEditCourse}
-                onDeleteCourse={handleDeleteCourse}
-              />
+                onDeleteCourse={handleDeleteCourse} />
             </Grid>
           </Grid>
         </TabPanel>
@@ -426,15 +421,13 @@ const AdminConsole = () => {
         user={selectedUser}
         courses={courses}
         onClose={() => setOpenUserDialog(false)}
-        onSave={handleSaveUser}
-      />
+        onSave={handleSaveUser} />
       <CourseDialog
         open={openCourseDialog}
         course={selectedCourse}
         onClose={() => setOpenCourseDialog(false)}
-        onSave={handleSaveCourse}
-      />
-    </Container>
+        onSave={handleSaveCourse} />
+    </Container></>
   );
 };
 

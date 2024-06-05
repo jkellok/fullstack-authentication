@@ -49,7 +49,7 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
                   <TableCell>{student.name}</TableCell>
                   <TableCell>{student.email}</TableCell>
                   <TableCell>{student.skills.join(", ")}</TableCell>
-                  <TableCell>{student.expected_graduate_year}</TableCell>
+                  <TableCell>{student.expected_graduation_year}</TableCell>
                   <TableCell>{avgGrade}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => onEditStudent(student)}>
