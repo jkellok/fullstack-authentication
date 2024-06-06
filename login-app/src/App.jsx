@@ -1,5 +1,7 @@
 import { ReactKeycloakProvider, useKeycloak } from '@react-keycloak/web'
 import keycloak from './keycloak'
+import { supabase } from './supabaseClient'
+import { useEffect, useState } from 'react'
 
 // Keycloak client uses localhost:5174
 
@@ -27,7 +29,55 @@ const Projects = () => {
       </ul>
     </div>
   )
+}
 
+const SupabaseLoginComponent = () => {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+    };
+
+    getSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  console.log("supabase session", session)
+
+  const loginWithKeycloak = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "keycloak",
+      options: {
+        scopes: "openid",
+        redirectTo: "http://localhost:5174",
+      },
+    });
+    if (error) console.log("Error logging in:", error.message);
+  };
+
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.log("Error logging out:", error.message);
+  };
+
+  return session ? (
+    <button onClick={logout}>Logout from Supabase keycloak</button>
+  ) : (
+    <button onClick={loginWithKeycloak}>Login to Supabase with Keycloak</button>
+  )
 }
 
 const LoginComponent = () => {
@@ -37,6 +87,8 @@ const LoginComponent = () => {
   if (!initialized) {
     return <div>Loading...</div>
   }
+
+  if (keycloak.authenticated) console.log("keycloak", keycloak)
 
   return keycloak.authenticated ? (
     <div>
@@ -62,6 +114,7 @@ function App() {
       <h1>Login app to test SSO</h1>
       <ReactKeycloakProvider authClient={keycloak}>
         <LoginComponent />
+        <SupabaseLoginComponent />
       </ReactKeycloakProvider>
     </div>
   )
