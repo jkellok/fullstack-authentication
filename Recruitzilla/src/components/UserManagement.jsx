@@ -28,16 +28,12 @@ const UserManagement = () => {
 
   // sends "confirm email change" email to new email address
   const updateEmailTo = async () => {
-    console.log("in updateemail")
     const { data, error } = await supabase.auth.updateUser({
       email: newEmail,
       options: {
         emailRedirectTo: 'http://localhost:5173/login/supabase'
       }
     })
-    console.log("data", data)
-    console.log("error", error)
-    console.log("start update email")
     if (error) {
       console.log("Error:", error.message)
       notification(error.message, "error")
@@ -47,7 +43,6 @@ const UserManagement = () => {
       notification("Email updated!", "success")
       notification("Check your email for confirmation link", "info")
     }
-    console.log("end of updateemail")
   }
   // sends OTP to new phone number
   const updatePhone = async () => {
@@ -118,8 +113,6 @@ const UserManagement = () => {
       notification("Removed phone number", "info")
     }
   }
-
-  console.log("session", session)
 
   return (
     <Container style={{ marginTop: "50px"}}>
