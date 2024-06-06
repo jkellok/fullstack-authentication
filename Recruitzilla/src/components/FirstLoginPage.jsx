@@ -151,7 +151,6 @@ const FirstLoginPage = () => {
             >
               Submit
             </button>
-            <p>Please login again to apply changes</p>
           </form>
         </div>
       </div>

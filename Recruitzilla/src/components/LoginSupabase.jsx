@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useNavigate } from "react-router-dom";
@@ -67,18 +67,10 @@ const LoginSupabase = () => {
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
         <Button value="Log out" onClick={logout} />
-        <Button
-          value="To previous Login page"
-          onClick={() => handleClick("/login")}
-        />
-        <Button
-          value="To First Login Form"
-          onClick={() => handleClick("/firstlogin")}
-        />
-        <Button
-          value="To TestPage with test data"
-          onClick={() => handleClick("/testpage")}
-        />
+        <Button value="To previous Login page" onClick={() => handleClick("/login")} />
+        <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
+        <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
+        <Button value="To User Management" onClick={() => handleClick("/usermanagement")} />
       </div>
     );
   }
