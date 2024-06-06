@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Grid, Paper, Box, TextField } from "@mui/material";
 import { supabase } from "../supabaseClient";
 import { ToastContainer, toast } from 'react-toastify'
+import { useSession } from '../hooks/useSession'
+import { useAuth } from "./context/AuthContext";
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -19,9 +21,13 @@ const UserManagement = () => {
   const [newEmail, setNewEmail] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const {
+    session,
+  } = useAuth();
+
 
   // sends "confirm email change" email to new email address
-  const updateEmail = async () => {
+  const updateEmailTo = async () => {
     const { data, error } = await supabase.auth.updateUser({
       email: newEmail,
       options: {
@@ -126,7 +132,7 @@ const UserManagement = () => {
                 onChange={(e) => setNewEmail(e.target.value)}
                 style={{ marginBottom: "10px", width: "50%" }}
               />
-              <CustomButton value="Change Email Address" onClick={updateEmail} />
+              <CustomButton value="Change Email Address" onClick={updateEmailTo} />
             </Grid>
             <Grid item xs={12}>
               <TextField

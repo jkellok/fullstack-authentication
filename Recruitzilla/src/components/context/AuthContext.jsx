@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState("student");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,14 +14,7 @@ export const AuthProvider = ({ children }) => {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
-      if (session) {
-        const { data, error } = await supabase.rpc("get_my_claims", {});
-        if (error) {
-          console.error("Error fetching role:", error);
-        } else {
-          setRole(data.userrole);
-        }
-      }
+      getRole()
       setLoading(false);
     };
 
@@ -30,16 +23,7 @@ export const AuthProvider = ({ children }) => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
-        if (session) {
-          const { data, error } = await supabase.rpc("get_my_claims", {});
-          if (error) {
-            console.error("Error fetching role:", error);
-          } else {
-            setRole(data.userrole);
-          }
-        } else {
-          setRole(null);
-        }
+        getRole()
       }
     );
 
@@ -47,6 +31,15 @@ export const AuthProvider = ({ children }) => {
       authListener.subscription.unsubscribe();
     };
   }, []);
+
+  const getRole = async () => {
+    const { data, error } = await supabase.rpc("get_my_claims", {});
+    if (error) {
+      console.error("Error fetching role:", error);
+    } else {
+      setRole(data.userrole);
+    }
+  }
 
   const loginWithKeycloak = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
