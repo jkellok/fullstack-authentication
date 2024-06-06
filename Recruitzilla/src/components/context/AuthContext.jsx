@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       setRole(data.userrole);
     }
-    console.log("userrole", data.userrole)
   }
 
   const loginWithKeycloak = async () => {
