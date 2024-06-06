@@ -69,7 +69,11 @@ function App() {
             </Route>
             <Route path="/testpage" element={<TestPage />} />
             <Route path="/firstlogin" element={<FirstLoginPage />} />
-            <Route path="/usermanagement" element={<UserManagement />} />
+            <Route
+              element={<ProtectedRoute allowedRoles={["student", "admin", "recruiter"]} />}
+            >
+              <Route path="/usermanagement" element={<UserManagement />} />
+            </Route>
             <Route
               element={<ProtectedRoute allowedRoles={["student", "admin"]} />}
             >

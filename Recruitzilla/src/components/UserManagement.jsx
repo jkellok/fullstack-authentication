@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Grid, Paper, Box, TextField } from "@mui/material";
 import { supabase } from "../supabaseClient";
 import { ToastContainer, toast } from 'react-toastify'
+import { useSession } from '../hooks/useSession'
+import { useAuth } from "./context/AuthContext";
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -19,15 +21,23 @@ const UserManagement = () => {
   const [newEmail, setNewEmail] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const {
+    session,
+  } = useAuth();
+
 
   // sends "confirm email change" email to new email address
-  const updateEmail = async () => {
+  const updateEmailTo = async () => {
+    console.log("in updateemail")
     const { data, error } = await supabase.auth.updateUser({
       email: newEmail,
       options: {
         emailRedirectTo: 'http://localhost:5173/login/supabase'
       }
     })
+    console.log("data", data)
+    console.log("error", error)
+    console.log("start update email")
     if (error) {
       console.log("Error:", error.message)
       notification(error.message, "error")
@@ -37,6 +47,7 @@ const UserManagement = () => {
       notification("Email updated!", "success")
       notification("Check your email for confirmation link", "info")
     }
+    console.log("end of updateemail")
   }
   // sends OTP to new phone number
   const updatePhone = async () => {
@@ -108,6 +119,8 @@ const UserManagement = () => {
     }
   }
 
+  console.log("session", session)
+
   return (
     <Container style={{ marginTop: "50px"}}>
       <Paper style={{ padding: "40px", margin: '50px 50px 0 50px' }}>
@@ -126,7 +139,7 @@ const UserManagement = () => {
                 onChange={(e) => setNewEmail(e.target.value)}
                 style={{ marginBottom: "10px", width: "50%" }}
               />
-              <CustomButton value="Change Email Address" onClick={updateEmail} />
+              <CustomButton value="Change Email Address" onClick={updateEmailTo} />
             </Grid>
             <Grid item xs={12}>
               <TextField
