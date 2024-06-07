@@ -1,0 +1,244 @@
+<mxfile host="app.diagrams.net" modified="2024-06-04T07:11:42.161Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0" etag="33o8J14qnzy2QwkMfLEl" version="24.4.13" type="device" pages="2">
+  <diagram name="Page-1" id="13e1069c-82ec-6db2-03f1-153e76fe0fe0">
+    <mxGraphModel dx="1434" dy="832" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7baba1c4bc27f4b0-2" value="&lt;div&gt;Authzilla&lt;/div&gt;&lt;div&gt;Web app&lt;br&gt;&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;rounded=1;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12;align=center;" parent="1" vertex="1">
+          <mxGeometry x="240" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-3" value="Supabase" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;rounded=1;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12;align=center;" parent="1" vertex="1">
+          <mxGeometry x="400" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-29" value="Authorization code with app credentials" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" parent="7baba1c4bc27f4b0-3" target="7baba1c4bc27f4b0-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="270" as="sourcePoint" />
+            <mxPoint x="160" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-17" value="&lt;div&gt;Redirect to Keycloak&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" parent="7baba1c4bc27f4b0-3" source="7baba1c4bc27f4b0-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60" y="130" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="65" y="130" />
+            </Array>
+            <mxPoint x="190" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-4" value="KeyCloak" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;rounded=1;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12;align=center;fillStyle=auto;" parent="1" vertex="1">
+          <mxGeometry x="540" y="80" width="100" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-14" value="&lt;div&gt;ID Token, &lt;br&gt;&lt;/div&gt;&lt;div&gt;Access Token,&lt;/div&gt;&lt;div&gt;Refresh Token&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="7baba1c4bc27f4b0-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="340" as="sourcePoint" />
+            <mxPoint x="-90" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-35" value="&lt;div&gt;Validate Authorization code&lt;/div&gt;&lt;div&gt;and application credentials&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;elbow=vertical;edgeStyle=orthogonalEdgeStyle;curved=1;entryX=1;entryY=0.286;entryPerimeter=0;exitX=1.038;exitY=0.345;exitPerimeter=0;" parent="7baba1c4bc27f4b0-4" edge="1">
+          <mxGeometry x="-0.2336" y="40" relative="1" as="geometry">
+            <mxPoint x="45.40000000000009" y="299.9999999999999" as="sourcePoint" />
+            <mxPoint x="50.01999999999998" y="337.91999999999996" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100.01999999999998" y="299.9" />
+              <mxPoint x="100.01999999999998" y="337.9" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-23" value="User submits credentials" style="html=1;verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="149.5" y="280" as="sourcePoint" />
+            <mxPoint x="590" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-11" value="&lt;div&gt;Click Login&amp;nbsp;&lt;/div&gt;&lt;div&gt;with Keycloak&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;exitX=0.5;exitY=0.172;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;" parent="1" target="7baba1c4bc27f4b0-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="179.76" as="sourcePoint" />
+            <mxPoint x="285" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7baba1c4bc27f4b0-14" value="Authorization request" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="200" as="sourcePoint" />
+            <mxPoint x="450" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-23" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;endArrow=none;endFill=0;dashed=1;" edge="1" parent="1" source="PX7r41C8jKoDGEAEVAmK-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="145" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-3" value="User" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="130" y="60" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-12" value="Show login page to user" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="589.5" y="250" as="sourcePoint" />
+            <mxPoint x="149.5" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-13" value="Authorization code" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="320" as="sourcePoint" />
+            <mxPoint x="290" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-15" value="&lt;div&gt;Access Token,&lt;/div&gt;&lt;div&gt;Refresh Token &lt;br&gt;&lt;/div&gt;&lt;div&gt;(Supabase)&lt;/div&gt;&lt;div&gt;and provider tokens&amp;nbsp;&lt;/div&gt;&lt;div&gt;(Keycloak)&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="1" target="7baba1c4bc27f4b0-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="440" as="sourcePoint" />
+            <mxPoint x="310" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-17" value="Send response" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="530" as="sourcePoint" />
+            <mxPoint x="289.5" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-16" value="&lt;div&gt;Request data with&amp;nbsp;&lt;/div&gt;&lt;div&gt;Access Token&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="500" as="sourcePoint" />
+            <mxPoint x="450" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PX7r41C8jKoDGEAEVAmK-26" value="&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; face=&quot;Verdana&quot;&gt;Skip login page if session&amp;nbsp;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; face=&quot;Verdana&quot;&gt;within same Keycloak realm&amp;nbsp;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; face=&quot;Verdana&quot;&gt;already exists&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#666666;fillColor=#f5f5f5;fontSize=16;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="620" y="230" width="200" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Copy of Page-1" id="uzajce16yBueRWfyHxfM">
+    <mxGraphModel dx="1434" dy="832" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-0" />
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-1" parent="-8wHPBKjxrdZyX75qHHw-0" />
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-2" value="&lt;div&gt;Authzilla&lt;/div&gt;&lt;div&gt;Web app&lt;br&gt;&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;rounded=1;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12;align=center;" vertex="1" parent="-8wHPBKjxrdZyX75qHHw-1">
+          <mxGeometry x="240" y="80" width="100" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-3" value="Redirect to /firstlogin" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-2">
+          <mxGeometry x="0.0032" relative="1" as="geometry">
+            <mxPoint x="50" y="280" as="sourcePoint" />
+            <mxPoint x="-95" y="280" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-4" value="&lt;div&gt;User submits form&amp;nbsp;&lt;/div&gt;&lt;div&gt;with name and role&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-94" y="320" as="sourcePoint" />
+            <mxPoint x="50" y="320" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-8" value="&lt;div&gt;User is logged out&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50.5" y="380" as="sourcePoint" />
+            <mxPoint x="-94" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-9" value="User logs in again" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-94" y="420" as="sourcePoint" />
+            <mxPoint x="50" y="420" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-3" value="Supabase" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;rounded=1;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12;align=center;" vertex="1" parent="-8wHPBKjxrdZyX75qHHw-1">
+          <mxGeometry x="400" y="80" width="100" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-0" value="&lt;div&gt;Access Token and&lt;/div&gt;&lt;div&gt;Refresh Token&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="160" as="sourcePoint" />
+            <mxPoint x="-110" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-1" value="&lt;div&gt;Request user data,&lt;/div&gt;&lt;div&gt;is the user new,&lt;/div&gt;&lt;div&gt;get new_users.is_new&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="220" as="sourcePoint" />
+            <mxPoint x="50" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-2" value="&lt;div&gt;Send response,&lt;/div&gt;&lt;div&gt;is_new = true&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50.5" y="260" as="sourcePoint" />
+            <mxPoint x="-110" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-5" value="&lt;div&gt;Data is sent to&lt;/div&gt;&lt;div&gt;public.new_users&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="330" as="sourcePoint" />
+            <mxPoint x="50" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-11" value="&lt;div&gt;New entry in&amp;nbsp;&lt;/div&gt;&lt;div&gt;auth.users table&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="110" as="sourcePoint" />
+            <mxPoint x="50" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="odgqB7WwlLOnfThK7BMa-0" value="&lt;div&gt;A function is triggered,&lt;/div&gt;&lt;div&gt;entry created in&amp;nbsp;&lt;/div&gt;&lt;div&gt;public.new_users table&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;elbow=vertical;edgeStyle=orthogonalEdgeStyle;curved=1;entryX=1;entryY=0.286;entryPerimeter=0;exitX=1.038;exitY=0.345;exitPerimeter=0;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry x="-0.2336" y="40" relative="1" as="geometry">
+            <mxPoint x="45.40000000000009" y="109.99999999999989" as="sourcePoint" />
+            <mxPoint x="50.01999999999998" y="147.91999999999996" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100.01999999999998" y="109.89999999999998" />
+              <mxPoint x="100.01999999999998" y="147.89999999999998" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-7" value="&lt;div&gt;Function is triggered,&lt;br&gt;&lt;/div&gt;&lt;div&gt;sets a custom claim for role&lt;/div&gt;&lt;div&gt;in auth.users app metadata&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;elbow=vertical;edgeStyle=orthogonalEdgeStyle;curved=1;entryX=1;entryY=0.286;entryPerimeter=0;exitX=1.038;exitY=0.345;exitPerimeter=0;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry x="-0.2337" y="50" relative="1" as="geometry">
+            <mxPoint x="45.40000000000009" y="329.9999999999999" as="sourcePoint" />
+            <mxPoint x="50.01999999999998" y="367.91999999999996" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="100.01999999999998" y="329.9" />
+              <mxPoint x="100.01999999999998" y="367.9" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-10" value="Authorization request" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="430" as="sourcePoint" />
+            <mxPoint x="50" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-11" value="&lt;div&gt;New Access Token&lt;/div&gt;&lt;div&gt;which includes role&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50.5" y="470" as="sourcePoint" />
+            <mxPoint x="-110" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-12" value="&lt;div&gt;Request data with&lt;/div&gt;&lt;div&gt;Access Token&lt;br&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-110" y="520" as="sourcePoint" />
+            <mxPoint x="50" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-10" value="&lt;div&gt;Sign up for&amp;nbsp;&lt;/div&gt;&lt;div&gt;the first time&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;edgeStyle=elbowEdgeStyle;elbow=vertical;exitX=0.5;exitY=0.172;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=1;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-1" target="-8wHPBKjxrdZyX75qHHw-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="145" y="179.76" as="sourcePoint" />
+            <mxPoint x="285" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-12" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;endArrow=none;endFill=0;dashed=1;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-1" source="-8wHPBKjxrdZyX75qHHw-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="145" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-8wHPBKjxrdZyX75qHHw-13" value="User" style="shape=umlActor;verticalLabelPosition=top;verticalAlign=bottom;html=1;labelPosition=center;align=center;" vertex="1" parent="-8wHPBKjxrdZyX75qHHw-1">
+          <mxGeometry x="130" y="60" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-13" value="&lt;div&gt;Response depending&amp;nbsp;&lt;/div&gt;&lt;div&gt;on tables&#39; RLS&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=none;fontFamily=Verdana;fontSize=12;" edge="1" parent="-8wHPBKjxrdZyX75qHHw-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450.5" y="639" as="sourcePoint" />
+            <mxPoint x="290" y="639" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Pzb26Hz-QRL7ZcDQtYH3-14" value="&lt;div&gt;&lt;font style=&quot;font-size: 12px;&quot; face=&quot;Verdana&quot;&gt;RLS: Row-Level Security&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=#666666;fillColor=#f5f5f5;fontSize=16;fontColor=#333333;" vertex="1" parent="-8wHPBKjxrdZyX75qHHw-1">
+          <mxGeometry x="465" y="620" width="170" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
