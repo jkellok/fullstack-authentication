@@ -27,7 +27,7 @@ const Hero = () => {
         <p className="md:text-[#ecffe8] text-xl font-bold text-gray-500">
           Easily recruit the best students and young graduates
         </p>
-        <Link to={"/login"}>
+        <Link to={"/login/supabase"}>
           <button className="bg-[#00df9a] w-[200px] text-bold hover:bg-[#00B27B] rounded-md font-medium my-6 mx-auto py-3 text-black">
             Get Started
           </button>

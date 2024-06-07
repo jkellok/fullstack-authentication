@@ -41,6 +41,8 @@ const StudentProfile = ({ profileData, updateProfile }) => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
 
+
+
   // Update form data when profileData changes
   useEffect(() => {
     setFormData({
@@ -119,9 +121,9 @@ const StudentProfile = ({ profileData, updateProfile }) => {
                 margin="normal"
               />
               <TextField
-                name="country"
-                label="Country"
-                value={formData.country}
+                name="nationality"
+                label="Nationality"
+                value={formData.nationality}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -136,9 +138,9 @@ const StudentProfile = ({ profileData, updateProfile }) => {
                 disabled
               />
               <TextField
-                name="phoneNumber"
+                name="phone_number"
                 label="Phone Number"
-                value={formData.phoneNumber}
+                value={formData.phone_number}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -192,9 +194,9 @@ const StudentProfile = ({ profileData, updateProfile }) => {
                 </Select>
               </FormControl>
               <TextField
-                name="expected_graduate_year"
+                name="expected_graduation_year"
                 label="Expected Graduation Year"
-                value={formData.expected_graduate_year}
+                value={formData.expected_graduation_year}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -216,9 +218,9 @@ const StudentProfile = ({ profileData, updateProfile }) => {
               <CardContent>
                 <Typography variant="h6" gutterBottom>Personal Information</Typography>
                 <Typography variant="body1" sx={{ mt: 1 }}><strong>Name:</strong> {formData.name}</Typography>
-                <Typography variant="body1" sx={{ mt: 1 }}><strong>Country:</strong> {formData.country}</Typography>
+                <Typography variant="body1" sx={{ mt: 1 }}><strong>Country:</strong> {formData.nationality}</Typography>
                 <Typography variant="body1" sx={{ mt: 1 }}><strong>Email:</strong> {formData.email}</Typography>
-                <Typography variant="body1" sx={{ mt: 1 }}><strong>Phone Number:</strong> {formData.phoneNumber}</Typography>
+                <Typography variant="body1" sx={{ mt: 1 }}><strong>Phone Number:</strong> {formData.phone_number}</Typography>
                 <Typography variant="body1" sx={{ mt: 1 }}><strong>Languages:</strong> {Array.isArray(formData.languages) ? formData.languages.join(", ") : formData.languages}</Typography>
               </CardContent>
             </Card>
@@ -234,7 +236,7 @@ const StudentProfile = ({ profileData, updateProfile }) => {
                 <Typography variant="h6" gutterBottom>Professional Skills / Experience</Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Typography variant="body2" sx={{ mt: 1 }}><strong>Skills:</strong> {Array.isArray(formData.skills) ? formData.skills.join(", ") : formData.skills}</Typography>
-                <Typography variant="body2" sx={{ mt: 1 }}><strong>Expected Graduation Year:</strong> {formData.expected_graduate_year}</Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}><strong>Expected Graduation Year:</strong> {formData.expected_graduation_year}</Typography>
               </CardContent>
             </Card>
           </Grid>

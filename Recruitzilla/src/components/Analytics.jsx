@@ -1,6 +1,6 @@
 import React from "react";
 import unp from "../assets/unp.jpg";
-import { Link, Element } from "react-scroll";
+import { Link } from "react-router-dom";
 
 const Analytics = () => {
   return (
@@ -20,11 +20,11 @@ const Analytics = () => {
           <p className="text-[#1e1f1f]">
             <li>Engage directly with students</li>
           </p>
-          <Link to={"/login"}>
-            <button className="bg-#1e1f1f text-[#00df9a] bg-[#1e1f1f] w-[200px] rounded-md font-medium my-6 mx-auto md:mx-0 py-3">
-              Get Started
-            </button>
-          </Link>
+          <Link to={"/login/supabase"}>
+          <button className="bg-[#00df9a] w-[200px] text-bold hover:bg-[#00B27B] rounded-md font-medium my-6 mx-auto py-3 text-black">
+            Get Started
+          </button>
+        </Link>
         </div>
       </div>
     </div>

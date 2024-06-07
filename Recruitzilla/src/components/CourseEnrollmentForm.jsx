@@ -9,6 +9,7 @@ const CourseEnrollmentForm = ({ courses, onEnroll }) => {
   };
 
   const handleEnroll = () => {
+    console.log("Selected courses for enrollment:", selectedCourses); // Debug log
     onEnroll(selectedCourses);
   };
 
