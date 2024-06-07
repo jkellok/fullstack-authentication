@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { Container, Grid, Paper, Box, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { ListItemText, ListItem, List, Container, Grid, Paper, Box, TextField, Typography } from "@mui/material";
 import { supabase } from "../supabaseClient";
 import { ToastContainer, toast } from 'react-toastify'
-import { useSession } from '../hooks/useSession'
-import { useAuth } from "./context/AuthContext";
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -21,10 +19,11 @@ const UserManagement = () => {
   const [newEmail, setNewEmail] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const {
-    session,
-  } = useAuth();
+  const [identities, setIdentities] = useState([])
 
+  useEffect(() => {
+    getIdentities()
+  }, [])
 
   // sends "confirm email change" email to new email address
   const updateEmailTo = async () => {
@@ -57,7 +56,9 @@ const UserManagement = () => {
       setNewPhone('')
       notification("Phone number updated!", "success")
     }
+    getIdentities()
   }
+
   const updatePassword = async () => {
     const { data, error } = await supabase.auth.updateUser({
       password: newPassword
@@ -79,40 +80,63 @@ const UserManagement = () => {
     // email, phone, supabase linked providers
     const { data, error } = await supabase.auth.getUserIdentities()
     console.log("retrieved identities:", data)
-    // remove later or add some message telling user what identities they have on supabase
+    const fetchedIdentities = data.identities.map((identity) => {
+      return identity.provider
+    })
+    setIdentities(fetchedIdentities)
   }
 
-  const linkIdentity = async () => {
+  const linkIdentity = async (provider) => {
+    console.log("provider", provider)
     // links an oauth identity to an existing user
     // Enable Manual Linking must be enabled in Supabase auth settings
     // if run in browser, user is automatically redirected to returned URL
-    const { data, error } = await supabase.auth.linkIdentity({
-      provider: 'github'
-    })
-  }
 
-  const unlinkIdentity = async () => {
-    // Enable Manual Linking must be enabled
-    // could do with keycloak or supabase social login identities also
-    const { data: { identities } } = await supabase.auth.getUserIdentities()
-
-    const phoneIdentity = identities.find((identity) =>
-      identity.provider === 'phone'
-    )
-    // show error is there is no phone number identity for user
-    if (!phoneIdentity) {
-      notification("No phone number found", "error")
+    if (identities.includes(provider)) {
+      notification("Identity is already linked!", "error")
       return
     }
 
-    const { error } = await supabase.auth.unlinkIdentity(phoneIdentity)
+    const { data, error } = await supabase.auth.linkIdentity({
+      provider: provider
+    })
     if (error) {
       console.log(error.message)
       notification(error.message, "error")
     } else {
-      notification("Removed phone number", "info")
+      notification(`Redirecting to ${provider} for linking the account...`, "info")
     }
+    setTimeout(() => {
+      // wait a bit before redirecting
+    }, 4000)
+    getIdentities()
   }
+
+  const unlinkIdentity = async (provider) => {
+    // Enable Manual Linking must be enabled
+    console.log("provider", provider)
+    const { data: { identities } } = await supabase.auth.getUserIdentities()
+
+    const selectedIdentity = identities.find((identity) =>
+      identity.provider === provider
+    )
+    // show error is provider is not found
+    if (!selectedIdentity) {
+      notification(`No identity found for ${provider}`, "error")
+      return
+    }
+
+    const { error } = await supabase.auth.unlinkIdentity(selectedIdentity)
+    if (error) {
+      console.log(error.message)
+      notification(error.message, "error")
+    } else {
+      notification(`Removed identity: ${provider}`, "info")
+    }
+    getIdentities()
+  }
+
+  const showIdentities = identities.map((id) => <ListItem key={id}>{id}</ListItem>)
 
   return (
     <Container style={{ marginTop: "50px"}}>
@@ -163,17 +187,23 @@ const UserManagement = () => {
           <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
             <p>Add or delete identities</p>
           </Grid>
-          <Grid container spacing={3} marginTop={ "10px" }>
+          <Typography>
+            You have {identities.length} identities associated with your account.
+            Your identities include:
+            <List>
+              {showIdentities}
+            </List>
+            Email cannot be removed from identities.
+          </Typography>
+          <Grid container spacing={3} marginTop={1}>
             <Grid item xs={1}>
-              <CustomButton value="Remove phone number" onClick={unlinkIdentity} />
-              <CustomButton value="Get Identities" onClick={getIdentities} />
-              <button
-                onClick={linkIdentity}
-                disabled
-                className="bg-[grey] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-              >
-                Add identity (WIP)
-              </button>
+              <CustomButton value="Link with Github" onClick={() => linkIdentity("github")} />
+              <CustomButton value="Link with Google" onClick={() => linkIdentity("google")} />
+              <CustomButton value="Link with Keycloak" onClick={() => linkIdentity("keycloak")} />
+              <CustomButton value="Unlink phone number" onClick={() => unlinkIdentity("phone")} />
+              <CustomButton value="Unlink Github" onClick={() => unlinkIdentity("github")} />
+              <CustomButton value="Unlink Google" onClick={() => unlinkIdentity("google")} />
+              <CustomButton value="Unlink Keycloak" onClick={() => unlinkIdentity("keycloak")} />
             </Grid>
           </Grid>
       </Paper>
