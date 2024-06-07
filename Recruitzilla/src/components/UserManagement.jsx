@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ListItemText, ListItem, List, Container, Grid, Paper, Box, TextField, Typography } from "@mui/material";
 import { supabase } from "../supabaseClient";
 import { ToastContainer, toast } from 'react-toastify'
+import { EnrollMFA, UnenrollMFA, AppWithMFA, AuthMFA } from "./MfaComponents";
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -207,6 +208,10 @@ const UserManagement = () => {
               <CustomButton value="Unlink Keycloak" onClick={() => unlinkIdentity("keycloak")} />
             </Grid>
           </Grid>
+          <EnrollMFA />
+          <UnenrollMFA />
+          <AppWithMFA />
+          <AuthMFA />
       </Paper>
       <ToastContainer autoClose={4000} />
     </Container>
