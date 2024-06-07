@@ -35,7 +35,7 @@ const StudentCard = ({ student, handleCardClick, avgGrade, stringAvatar }) => {
         </Grid>
         <Grid item xs={2}>
           <Typography variant="subtitle1">
-            <Chip label={`${student.expected_graduate_year}`} color="primary" />
+            <Chip label={`${student.expected_graduation_year}`} color="primary" />
           </Typography>
         </Grid>
       </Grid>

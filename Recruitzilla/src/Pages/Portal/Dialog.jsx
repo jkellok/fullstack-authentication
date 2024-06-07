@@ -170,7 +170,7 @@ const StudentDialog = ({ setSelectedStudent, selectedStudent, courses }) => {
                           sx={{ lineHeight: "0.5" }}
                           style={{ fontWeight: "bold" }}
                         >
-                          {selectedStudent.phone_number}
+                          +{selectedStudent.phone_number}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -465,7 +465,7 @@ const StudentDialog = ({ setSelectedStudent, selectedStudent, courses }) => {
                           color: "#2db83d",
                         }}
                       >
-                        {selectedStudent.expected_graduate_year}
+                        {selectedStudent.expected_graduation_year}
                       </Typography>
                     </Grid>
 

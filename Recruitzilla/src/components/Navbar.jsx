@@ -15,11 +15,12 @@ const Navbar = () => {
   const location = path.split("/")[1];
   const navigate = useNavigate();
   const scroller = Scroll.scroller;
-  const session = useSession()
+  const session = useSession();
 
   const handleNav = () => {
     setNav(!nav);
   };
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollTop =
@@ -32,6 +33,17 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollTop]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && nav) {
+        setNav(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [nav]);
+
   const goToPageAndScroll = async (selector) => {
     await navigate("/");
     await scroller.scrollTo(selector, {
@@ -41,23 +53,24 @@ const Navbar = () => {
       spy: true,
     });
   };
+
   return (
     <>
       <div
-        className={` fixed-navbar flex justify-between items-center h-24 w-full text-white ${
+        className={`fixed-navbar flex justify-between items-center h-24 w-full text-white ${
           navVisible ? "" : "hidden-navbar"
         }`}
       >
         <div className="max-w-[1240px] mx-auto px-4 w-full flex justify-between items-center">
           <nav className="flex justify-between items-center w-full">
             <Link to="/">
-                <button>
-                  <h1 className="text-3xl font-bold text-[#00df9a]">
-                    RECRUIT ZILLA.
-                  </h1>
-                </button>
+              <button>
+                <h1 className="text-3xl font-bold text-[#00df9a]">
+                  RECRUIT ZILLA.
+                </h1>
+              </button>
             </Link>
-            {location != "login" ? (
+            {location !== "login" ? (
               <ul className="hidden md:flex">
                 <ScrollLink to="home" spy={true} smooth={true}>
                   <button className="p-4 text-bold hover:bg-[#323236] rounded-md">
@@ -69,24 +82,22 @@ const Navbar = () => {
                     Company
                   </button>
                 </ScrollLink>
-
                 <ScrollLink to="contact" spy={true} smooth={true}>
                   <button className="p-4 text-bold hover:bg-[#323236] rounded-md">
                     Contact
                   </button>
                 </ScrollLink>
-                {session
-                  ?
-                  <NavLink to="/login" spy={true} smooth={true}>
+                {session ? (
+                  <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <LogoutButton />
                   </NavLink>
-                  :
-                  <NavLink to="/login" spy={true} smooth={true}>
-                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
-                      Login{" "}
+                ) : (
+                  <NavLink to="/login/supabase" spy={true} smooth={true}>
+                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
+                      Login
                     </button>
                   </NavLink>
-                }
+                )}
               </ul>
             ) : (
               <ul className="hidden md:flex">
@@ -102,25 +113,23 @@ const Navbar = () => {
                 >
                   Company
                 </button>
-
                 <button
                   onClick={() => goToPageAndScroll("contact")}
                   className="p-4 text-bold hover:bg-[#323236] rounded-md"
                 >
                   Contact
                 </button>
-                {session
-                  ?
-                  <NavLink to="/login" spy={true} smooth={true}>
+                {session ? (
+                  <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <LogoutButton />
                   </NavLink>
-                  :
-                  <NavLink to="/login" spy={true} smooth={true}>
-                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4  text-black">
-                      Login{" "}
+                ) : (
+                  <NavLink to="/login/supabase" spy={true} smooth={true}>
+                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
+                      Login
                     </button>
                   </NavLink>
-                }
+                )}
               </ul>
             )}
           </nav>
@@ -154,6 +163,19 @@ const Navbar = () => {
                   <button>Contact</button>
                 </li>
               </ScrollLink>
+              {session ? (
+                <li className="p-4 border-b border-gray-600">
+                  <LogoutButton />
+                </li>
+              ) : (
+                <li className="p-4 border-b border-gray-600">
+                  <NavLink to="/login/supabase" spy={true} smooth={true}>
+                    <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-full text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
+                      Login
+                    </button>
+                  </NavLink>
+                </li>
+              )}
             </ul>
           </ul>
         </div>

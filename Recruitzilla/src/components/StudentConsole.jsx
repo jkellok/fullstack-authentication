@@ -3,9 +3,11 @@ import { Container, Typography, Button, Grid, Card, CardContent } from "@mui/mat
 import StudentProfile from "./StudentProfile";
 import { useAuth } from "./context/AuthContext";
 import StudentDashboard from "./StudentDashboard"; 
+import { supabase } from "../supabaseClient"
 
-const StudentConsole = ({ students, courses, schedule }) => {
+const StudentConsole = ({ students }) => {
   const { session } = useAuth();
+  const [ student, setStudent] = useState([])
   const [selectedView, setSelectedView] = useState('profile');
   const [profileData, setProfileData] = useState({
     name: "",
@@ -18,6 +20,8 @@ const StudentConsole = ({ students, courses, schedule }) => {
     expected_graduate_year: "",
     courses: []
   });
+
+
 
   useEffect(() => {
     if (session) {

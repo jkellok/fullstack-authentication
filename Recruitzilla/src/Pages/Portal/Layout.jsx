@@ -34,7 +34,7 @@ import FormLabel from "@mui/material/FormLabel";
 import StudentDialog from "./Dialog"; // The path should be relative to your App.js file
 import StudentCard from "./Card";
 import studentsData from "../../assets/students_final.json";
-import coursesData from "../../assets/courses_final.json";
+import { supabase } from "../../supabaseClient"
 
 function stringToColor(string) {
   let hash = 0;
@@ -96,6 +96,25 @@ function App() {
   const currentStudents = data.slice(indexOfFirstStudent, indexOfLastStudent);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+  const fetchAndSetCourses = async () => {
+    const { data, error } = await supabase
+      .from("courses")
+      .select("id, name, instructor_name, credits");
+
+    if (error) {
+      console.error("Error fetching courses:", error);
+    } else {
+      console.log(data)
+      const formattedCourses = data.map((course) => ({
+        id: course.id,
+        name: course.name,
+        instructor_name: course.instructor_name,
+        credits: course.credits,
+      }));
+      setCourses(formattedCourses);
+    }
+  };
+
   const allSkills = new Set();
   students.forEach((student) => {
     student.skills.forEach((skill) => {
@@ -103,13 +122,42 @@ function App() {
     });
   });
 
+  const fetchAndSetStudents = async () => {
+    const { data, error } = await supabase
+      .from("students")
+      .select(
+        "id, name, bio, nationality, phone_number, email, skills, expected_graduation_year, list_of_courses(id, course_id, grade)"
+      );
+
+    if (error) {
+      console.error("Error fetching students:", error);
+    } else {
+      console.log(data)
+      const formattedStudents = data.map((student) => ({
+        id: student.id,
+        name: student.name,
+        bio: student.bio,
+        nationality: student.nationality,
+        phone_number: student.phone_number,
+        email: student.email,
+        skills: student.skills,
+        expected_graduation_year: student.expected_graduation_year,
+        list_of_courses: student.list_of_courses.map((course) => ({
+          id: course.course_id,
+          grade: course.grade,
+        })),
+      }));
+      setStudents(formattedStudents);
+      setData(formattedStudents);
+    }
+  };
   const allSkillsArray = Array.from(allSkills);
 
   const uniqueGrades = new Set();
   const uniqueGradYears = new Set();
 
   students.forEach((student) => {
-    uniqueGradYears.add(student.expected_graduate_year);
+    uniqueGradYears.add(student.expected_graduation_year);
 
     const avgGrade =
       student.list_of_courses.reduce((acc, curr) => acc + curr.grade, 0) /
@@ -144,7 +192,7 @@ function App() {
         return avgGradeA - avgGradeB;
       }
       if (option === "Expected year of graduation") {
-        return a.expected_graduate_year - b.expected_graduate_year;
+        return a.expected_graduation_year - b.expected_graduation_year;
       }
       return 0;
     });
@@ -173,9 +221,10 @@ function App() {
     //     console.error("Error fetching courses:", error);
     //   });
 
-    setStudents(studentsData);
-    setCourses(coursesData);
-    setData(studentsData); // Populate initial data with fetched students
+    
+    fetchAndSetCourses();
+    fetchAndSetStudents();
+    
   }, []);
 
   const handleFilterChange = (event, values) => {
@@ -212,7 +261,7 @@ function App() {
           student.list_of_courses.some((course) => course.id === filter) ||
           student.skills.includes(filter) ||
           Math.round(avgGrade) === filter ||
-          student.expected_graduate_year === filter
+          student.expected_graduation_year === filter
         );
       });
     });
