@@ -23,7 +23,7 @@ If Keycloak session is terminated (e.g. with admin console), user will still sta
 
 In Keycloak
 - In the same realm with another client, set up a new client
--- Users are shared between clients
+    - Users are shared between clients
 - Client type: OpenID Connect
 - Client ID: login-app
 - Client authentication: OFF
@@ -34,18 +34,18 @@ In Keycloak
 In frontend (login-app)
 - Npm install keycloak-js
 - Npm install @react-keycloak/web (deprecated)
--- https://github.com/authts/react-oidc-context
--- Newer one but haven’t tried it
+    - https://github.com/authts/react-oidc-context
+    - Newer one but haven’t tried it
 - /src/keycloak.js, insert keycloak configuration
--- realm (fullstackauth)
--- url (https://keycloak.ilab.fi:8443)
--- clientId (login-app)
+    - realm (fullstackauth)
+    - url (https://keycloak.ilab.fi:8443)
+    - clientId (login-app)
 - more configs for keycloak init: https://www.keycloak.org/docs/latest/securing_apps/index.html#methods
 - API reference: https://www.keycloak.org/docs/latest/securing_apps/index.html#api-reference
--- Keycloak.authenticated, true if user authenticated
--- Keycloak.tokenParsed, parsed token as JavaScript object
--- Keycloak.login()
--- Keycloak.logout()
+    - Keycloak.authenticated, true if user authenticated
+    - Keycloak.tokenParsed, parsed token as JavaScript object
+    - Keycloak.login()
+    - Keycloak.logout()
 
 ## Some more info
 OIDC has different flows that can be used. Authorization Code Flow is for browser-based applications like SPAs (Single Page Applications) or server-side applications.
