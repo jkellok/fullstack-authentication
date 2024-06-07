@@ -87,18 +87,20 @@ const UserManagement = () => {
   }
 
   const linkIdentity = async (provider) => {
-    console.log("provider", provider)
     // links an oauth identity to an existing user
     // Enable Manual Linking must be enabled in Supabase auth settings
     // if run in browser, user is automatically redirected to returned URL
 
     if (identities.includes(provider)) {
-      notification("Identity is already linked!", "error")
+      notification(`Identity is already linked with ${provider}!`, "error")
       return
     }
 
     const { data, error } = await supabase.auth.linkIdentity({
-      provider: provider
+      provider: provider,
+      options: {
+        redirectTo: "http://localhost:5173/usermanagement"
+      }
     })
     if (error) {
       console.log(error.message)
@@ -114,7 +116,6 @@ const UserManagement = () => {
 
   const unlinkIdentity = async (provider) => {
     // Enable Manual Linking must be enabled
-    console.log("provider", provider)
     const { data: { identities } } = await supabase.auth.getUserIdentities()
 
     const selectedIdentity = identities.find((identity) =>
