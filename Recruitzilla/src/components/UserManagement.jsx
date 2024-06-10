@@ -3,6 +3,7 @@ import { ListItemText, ListItem, List, Container, Grid, Paper, Box, TextField, T
 import { supabase } from "../supabaseClient";
 import { ToastContainer, toast } from 'react-toastify'
 import { EnrollMFA, UnenrollMFA, AppWithMFA, AuthMFA } from "./MfaComponents";
+import { Button } from "react-scroll";
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -140,6 +141,15 @@ const UserManagement = () => {
 
   const showIdentities = identities.map((id) => <ListItem key={id}>{id}</ListItem>)
 
+  const getAal = async () => {
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    const { currentLevel, nextLevel, currentAuthenticationMethods } = data
+    console.log("aal data", data)
+    console.log("current level", currentLevel)
+    console.log("next level", nextLevel)
+    console.log("current authentication methods", currentAuthenticationMethods)
+  }
+
   return (
     <Container style={{ marginTop: "50px"}}>
       <Paper style={{ padding: "40px", margin: '50px 50px 0 50px' }}>
@@ -208,10 +218,19 @@ const UserManagement = () => {
               <CustomButton value="Unlink Keycloak" onClick={() => unlinkIdentity("keycloak")} />
             </Grid>
           </Grid>
-          <EnrollMFA />
-          <UnenrollMFA />
-          <AppWithMFA />
-          <AuthMFA />
+          <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
+            <p>Enroll or unenroll MFA</p>
+          </Grid>
+          <Grid item xs={1}>
+            <EnrollMFA />
+            <p style={{ fontSize: 20 }}>Unenroll MFA</p>
+            <UnenrollMFA />
+            <p style={{ fontSize: 20 }}>App with MFA</p>
+            <AppWithMFA />
+            <p style={{ fontSize: 20 }}>Auth MFA</p>
+            <AuthMFA />
+          </Grid>
+          <CustomButton value="get AAL" onClick={getAal} />
       </Paper>
       <ToastContainer autoClose={4000} />
     </Container>
