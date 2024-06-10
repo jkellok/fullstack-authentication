@@ -1,15 +1,36 @@
 import React, { useState } from "react";
-import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Button, Box } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  Button,
+  Box,
+  TextField,
+} from "@mui/material";
 
 const CourseEnrollmentForm = ({ courses, onEnroll }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const handleCourseChange = (event) => {
-    setSelectedCourses(event.target.value);
+    const selectedValues = event.target.value;
+    const newSelectedCourses = selectedValues.map((course) => {
+      const existing = selectedCourses.find((c) => c.id === course.id);
+      return existing ? existing : { ...course, grade: 1 };
+    });
+    setSelectedCourses(newSelectedCourses);
+  };
+
+  const handleGradeChange = (event, course) => {
+    const newSelectedCourses = selectedCourses.map((c) =>
+      c.id === course.id ? { ...c, grade: event.target.value } : c
+    );
+    setSelectedCourses(newSelectedCourses);
   };
 
   const handleEnroll = () => {
-    console.log("Selected courses for enrollment:", selectedCourses); // Debug log
     onEnroll(selectedCourses);
   };
 
@@ -21,18 +42,44 @@ const CourseEnrollmentForm = ({ courses, onEnroll }) => {
           multiple
           value={selectedCourses}
           onChange={handleCourseChange}
-          renderValue={(selected) => selected.map(course => course.name).join(", ")}
+          renderValue={(selected) =>
+            selected.map((course) => course.name).join(", ")
+          }
         >
           {courses.map((course) => (
             <MenuItem key={course.id} value={course}>
-              <Checkbox checked={selectedCourses.indexOf(course) > -1} />
+              <Checkbox
+                checked={
+                  selectedCourses.findIndex((c) => c.id === course.id) > -1
+                }
+              />
               <ListItemText primary={course.name} />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <Box sx={{ textAlign: 'right', mt: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleEnroll} sx={{ backgroundColor: "#00B27B" }}>
+
+      {selectedCourses.map((course) => (
+        <Box key={course.id} display="flex" alignItems="center" mt={2}>
+          <ListItemText primary={course.name} />
+          <TextField
+            label="Grade"
+            type="number"
+            value={course.grade}
+            onChange={(e) => handleGradeChange(e, course)}
+            inputProps={{ min: 1, max: 5 }}
+            sx={{ width: 60, ml: 2 }}
+          />
+        </Box>
+      ))}
+
+      <Box sx={{ textAlign: "right", mt: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleEnroll}
+          sx={{ backgroundColor: "#00B27B" }}
+        >
           Enroll
         </Button>
       </Box>

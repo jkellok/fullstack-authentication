@@ -11,11 +11,6 @@ import StudentProfile from "./StudentProfile";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "./context/AuthContext";
 
-const sampleSchedule = [
-  { day: "Monday", time: "10:00 - 11:30", course: "Mathematics 1", instructor: " Mikael", location: "Room 101" },
-  { day: "Wednesday", time: "10:00 - 11:30", course: "Programming Language 1", instructor: "Esa Kunnari", location: "Room 202" },
-  { day: "Friday", time: "10:00 - 11:30", course: "Programming Language 2", instructor: "Erkki", location: "Room 303" }
-];
 
 const skillsOptions = ["Device oriented programming","Networking","IoT","Backend","Frontend","General","Data Analysis"];
 
@@ -24,7 +19,6 @@ const StudentDashboard = () => {
   const [filters, setFilters] = useState({ skills: [] });
   const [searchQuery, setSearchQuery] = useState("");
   const [enrollOpen, setEnrollOpen] = useState(false);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
@@ -80,28 +74,32 @@ const StudentDashboard = () => {
     setFilters({ skills: [] });
   };
 
- const handleEnroll = async (selectedCourses) => {
+const handleEnroll = async (selectedCourses) => {
   try {
-    // Insert each selected course into the list_of_courses table
+ 
     for (const course of selectedCourses) {
       const { error } = await supabase
         .from("list_of_courses")
-        .insert({ student_id: profileData.id, course_id: course.id });
+        .insert({
+          student_id: profileData.id,
+          course_id: course.id,
+          grade: course.grade,
+        });
 
       if (error) {
         console.error("Error enrolling in course:", error);
       }
     }
 
-    // Refetch student data to reflect new enrollments
+
     await fetchAndSetStudent();
 
     setEnrollOpen(false);
-    console.log("Enrolled in courses:", selectedCourses);
   } catch (error) {
     console.error("Error enrolling in courses:", error);
   }
 };
+
 
   const handleCourseClick = (course) => {
     setSelectedCourse(course);
@@ -171,7 +169,6 @@ const StudentDashboard = () => {
         <Tab label="Profile" />
         <Tab label="Courses" />
         <Tab label="Grades" />
-        <Tab label="Schedule" />
       </Tabs>
 
       {activeTab === 0 && (
@@ -288,41 +285,6 @@ const StudentDashboard = () => {
                     <TableCell>{course.name}</TableCell>
                     <TableCell align="right">{course.grade}</TableCell>
                     <TableCell align="right">{course.credits}</TableCell>
-                    <IconButton onClick={() => console.log("button")}>
-                      <Edit />
-                    </IconButton>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      )}
-
-      {activeTab === 3 && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom sx={{ color: "#00B27B" }}>
-            Schedule
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Day</TableCell>
-                  <TableCell>Time</TableCell>
-                  <TableCell>Course</TableCell>
-                  <TableCell>Instructor</TableCell>
-                  <TableCell>Location</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sampleSchedule.map((entry, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{entry.day}</TableCell>
-                    <TableCell>{entry.time}</TableCell>
-                    <TableCell>{entry.course}</TableCell>
-                    <TableCell>{entry.instructor}</TableCell>
-                    <TableCell>{entry.location}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

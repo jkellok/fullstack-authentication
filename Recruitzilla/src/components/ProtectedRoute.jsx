@@ -16,7 +16,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   return allowedRoles.includes(role) ? (
     <Outlet />
   ) : (
-    <Navigate to="/app/filter" />
+    <Navigate to="/" />
   );
 };
 
