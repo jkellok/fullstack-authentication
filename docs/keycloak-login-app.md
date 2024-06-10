@@ -49,10 +49,15 @@ In frontend (login-app)
 
 ## Some more info
 OIDC has different flows that can be used. Authorization Code Flow is for browser-based applications like SPAs (Single Page Applications) or server-side applications.
+
 Authentication flows: https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85
+
 Ours uses standard flow, authorization code flow
 https://www.thomasvitale.com/keycloak-authentication-flow-sso-client/
+
 From official documentation: https://www.keycloak.org/docs/latest/securing_apps/#supported-grant-types
+
 Open ID Connect (OIDC) documentation: https://openid.net/specs/openid-connect-core-1_0.html (chapters 1-3)
+
 OAuth 2.0: https://auth0.com/intro-to-iam/what-is-oauth-2
 
