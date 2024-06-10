@@ -4,7 +4,7 @@ import {
   Select, MenuItem, Checkbox, ListItemText, Dialog, DialogActions, DialogContent, DialogTitle, 
   Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import CourseEnrollmentForm from "./CourseEnrollmentForm";
 import CourseDetails from "./CourseDetails";
 import StudentProfile from "./StudentProfile"; 
@@ -72,6 +72,24 @@ const StudentDashboard = () => {
   const resetFilters = () => {
     console.log("Filters applied:", filters);
     setFilters({ skills: [] });
+  };
+
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      const { error } = await supabase
+        .from("list_of_courses")
+        .delete()
+        .eq("course_id", courseId)
+        .eq("student_id", profileData.id); 
+  
+      if (error) {
+        console.error("Error deleting course:", error);
+      } else {
+        await fetchAndSetStudent(); 
+      }
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
   };
 
 const handleEnroll = async (selectedCourses) => {
@@ -273,10 +291,11 @@ const handleEnroll = async (selectedCourses) => {
           <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table>
               <TableHead>
-                <TableRow>
+              <TableRow>
                   <TableCell>Course</TableCell>
                   <TableCell align="right">Grade</TableCell>
                   <TableCell align="right">Credits</TableCell>
+                  <TableCell align="right">Actions</TableCell> {/* New Column for Actions */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -285,6 +304,11 @@ const handleEnroll = async (selectedCourses) => {
                     <TableCell>{course.name}</TableCell>
                     <TableCell align="right">{course.grade}</TableCell>
                     <TableCell align="right">{course.credits}</TableCell>
+                    <TableCell align="right"> {/* Action Cell */}
+                      <IconButton onClick={() => handleDeleteCourse(course.id)}> {/* Call handleDeleteCourse */}
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

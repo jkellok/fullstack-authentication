@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState("admin");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session);
-      getRole()
       setLoading(false);
     };
 
@@ -23,7 +22,6 @@ export const AuthProvider = ({ children }) => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
-        getRole()
       }
     );
 
@@ -32,6 +30,12 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      getRole();
+    }
+  }, [session]);
+
   const getRole = async () => {
     const { data, error } = await supabase.rpc("get_my_claims", {});
     if (error) {
@@ -39,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setRole(data.userrole);
     }
-  }
+  };
 
   const loginWithKeycloak = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
