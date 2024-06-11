@@ -150,8 +150,6 @@ export function UnenrollMFA() {
   const [factors, setFactors] = useState([])
   const [error, setError] = useState('') // holds an error message
   const [showMfa, setShowMfa] = useState(false)
-  // delete later
-  const [allFactors, setAllFactors] = useState([])
 
   useEffect(() => {
     ;(async () => {
@@ -160,7 +158,6 @@ export function UnenrollMFA() {
         throw error
       }
       setFactors(data.totp)
-      setAllFactors(data.all)
     })()
   }, [])
 
@@ -247,8 +244,6 @@ export function AppWithMFA() {
         if (error) {
           throw error
         }
-
-        console.log(data)
 
         if (data.nextLevel === 'aal1') {
           setShowMFAScreen(true)
