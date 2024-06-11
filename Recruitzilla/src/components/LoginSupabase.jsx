@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
 import { AppWithMFA } from "./MfaComponents";
+import { ToastContainer } from "react-toastify";
 
 const Button = ({ value, onClick }) => {
   return (
@@ -132,7 +133,7 @@ const LoginSupabase = () => {
         <div className="bg-[white]">
           <AppWithMFA />
         </div>
-
+        {/* <ToastContainer autoClose={4000} /> */}
       </div>
     );
   }

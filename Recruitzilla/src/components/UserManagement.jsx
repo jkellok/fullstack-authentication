@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ListItemText, ListItem, List, Container, Grid, Paper, Box, TextField, Typography } from "@mui/material";
+import { ListItem, List, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 import { supabase } from "../supabaseClient";
-import { ToastContainer, toast } from 'react-toastify'
-import { EnrollMFA, UnenrollMFA, AppWithMFA, AuthMFA } from "./MfaComponents";
-import { Button } from "react-scroll";
+import { toast } from 'react-toastify'
+import { EnrollMFA, UnenrollMFA, AppWithMFA } from "./MfaComponents";
+
+const notification = (message, type) => {
+  type ? toast[type](message) : toast(message)
+}
 
 const CustomButton = ({ value, onClick }) => {
   return (
@@ -17,15 +20,10 @@ const CustomButton = ({ value, onClick }) => {
   )
 }
 
-const UserManagement = () => {
+const UpdateDetails = ({ getIdentities }) => {
   const [newEmail, setNewEmail] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [identities, setIdentities] = useState([])
-
-  useEffect(() => {
-    getIdentities()
-  }, [])
 
   // sends "confirm email change" email to new email address
   const updateEmailTo = async () => {
@@ -36,7 +34,6 @@ const UserManagement = () => {
       }
     })
     if (error) {
-      console.log("Error:", error.message)
       notification(error.message, "error")
     }
     else {
@@ -52,7 +49,6 @@ const UserManagement = () => {
       phone: newPhone
     })
     if (error) {
-      console.log("Error:", error.message)
       notification(error.message, "error")
     } else {
       setNewPhone('')
@@ -66,7 +62,6 @@ const UserManagement = () => {
       password: newPassword
     })
     if (error) {
-      console.log("Error:", error)
       notification(error.message, "error")
     } else {
       setNewPassword('')
@@ -74,19 +69,51 @@ const UserManagement = () => {
     }
   }
 
-  const notification = (message, type) => {
-    type ? toast[type](message) : toast(message)
-  }
+  return (
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <TextField
+          label="New Email Address"
+          variant="outlined"
+          type="email"
+          helperText="A confirmation email will be sent to your new email address"
+          fullWidth
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+          style={{ marginBottom: "10px", width: "50%" }}
+        />
+        <CustomButton value="Change Email Address" onClick={updateEmailTo} />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="New Phone Number"
+          variant="outlined"
+          helperText="Add a phone number to use Phone OTP login"
+          fullWidth
+          value={newPhone}
+          onChange={(e) => setNewPhone(e.target.value)}
+          style={{ marginBottom: "10px", width: "50%" }}
+        />
+        <CustomButton value="Change Phone" onClick={updatePhone} />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="New Password"
+          variant="outlined"
+          type="password"
+          helperText="Password must be at least 6 characters long"
+          fullWidth
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          style={{ marginBottom: "10px", width: "50%" }}
+        />
+        <CustomButton value="Change Password" onClick={updatePassword} />
+      </Grid>
+    </Grid>
+  )
+}
 
-  const getIdentities = async () => {
-    // email, phone, supabase linked providers
-    const { data, error } = await supabase.auth.getUserIdentities()
-    console.log("retrieved identities:", data)
-    const fetchedIdentities = data.identities.map((identity) => {
-      return identity.provider
-    })
-    setIdentities(fetchedIdentities)
-  }
+const IdentityManagement = ({ identities, getIdentities }) => {
 
   const linkIdentity = async (provider) => {
     // links an oauth identity to an existing user
@@ -105,7 +132,6 @@ const UserManagement = () => {
       }
     })
     if (error) {
-      console.log(error.message)
       notification(error.message, "error")
     } else {
       notification(`Redirecting to ${provider} for linking the account...`, "info")
@@ -123,7 +149,6 @@ const UserManagement = () => {
     const selectedIdentity = identities.find((identity) =>
       identity.provider === provider
     )
-    // show error is provider is not found
     if (!selectedIdentity) {
       notification(`No identity found for ${provider}`, "error")
       return
@@ -131,7 +156,6 @@ const UserManagement = () => {
 
     const { error } = await supabase.auth.unlinkIdentity(selectedIdentity)
     if (error) {
-      console.log(error.message)
       notification(error.message, "error")
     } else {
       notification(`Removed identity: ${provider}`, "info")
@@ -141,13 +165,76 @@ const UserManagement = () => {
 
   const showIdentities = identities.map((id) => <ListItem key={id}>{id}</ListItem>)
 
+  return (
+    <>
+      <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
+        <p>Add or delete identities</p>
+      </Grid>
+      <Typography>
+        You have {identities.length} identities associated with your account.
+        Your identities include:
+        <List>
+          {showIdentities}
+        </List>
+        Email cannot be removed from identities.
+      </Typography>
+      <Grid container spacing={3} marginTop={1}>
+        <Grid item xs={1}>
+          <CustomButton value="Link with Github" onClick={() => linkIdentity("github")} />
+          <CustomButton value="Link with Google" onClick={() => linkIdentity("google")} />
+          <CustomButton value="Link with Keycloak" onClick={() => linkIdentity("keycloak")} />
+          <CustomButton value="Unlink phone number" onClick={() => unlinkIdentity("phone")} />
+          <CustomButton value="Unlink Github" onClick={() => unlinkIdentity("github")} />
+          <CustomButton value="Unlink Google" onClick={() => unlinkIdentity("google")} />
+          <CustomButton value="Unlink Keycloak" onClick={() => unlinkIdentity("keycloak")} />
+        </Grid>
+      </Grid>
+      <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
+        <p>Enroll or unenroll MFA</p>
+      </Grid>
+    </>
+  )
+}
+
+const MfaManagement = () => {
+
   const getAal = async () => {
     const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-    const { currentLevel, nextLevel, currentAuthenticationMethods } = data
     console.log("aal data", data)
-    console.log("current level", currentLevel)
-    console.log("next level", nextLevel)
-    console.log("current authentication methods", currentAuthenticationMethods)
+  }
+
+  return (
+    <>
+      <Grid item xs={1}>
+        <EnrollMFA />
+        <UnenrollMFA />
+        <Typography>
+          Test MFA
+        </Typography>
+        <AppWithMFA />
+      </Grid>
+      <CustomButton value="get AAL levels (delete later)" onClick={getAal} />
+    </>
+  )
+}
+
+const UserManagement = () => {
+  const [identities, setIdentities] = useState([])
+
+  useEffect(() => {
+    getIdentities()
+  }, [])
+
+  const getIdentities = async () => {
+    // email, phone, supabase linked providers
+    const { data, error } = await supabase.auth.getUserIdentities()
+    if (error) {
+      notification("An error happened while fetching identities", "error")
+    }
+    const fetchedIdentities = data.identities.map((identity) => {
+      return identity.provider
+    })
+    setIdentities(fetchedIdentities)
   }
 
   return (
@@ -156,83 +243,10 @@ const UserManagement = () => {
         <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h4.fontSize', marginBottom: '30px', marginTop: '10px' }}>
            <p>Manage your user account</p>
         </Grid>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <TextField
-                label="New Email Address"
-                variant="outlined"
-                type="email"
-                helperText="A confirmation email will be sent to your new email address"
-                fullWidth
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                style={{ marginBottom: "10px", width: "50%" }}
-              />
-              <CustomButton value="Change Email Address" onClick={updateEmailTo} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="New Phone Number"
-                variant="outlined"
-                helperText="Add a phone number to use Phone OTP login"
-                fullWidth
-                value={newPhone}
-                onChange={(e) => setNewPhone(e.target.value)}
-                style={{ marginBottom: "10px", width: "50%" }}
-              />
-              <CustomButton value="Change Phone" onClick={updatePhone} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="New Password"
-                variant="outlined"
-                type="password"
-                helperText="Password must be at least 6 characters long"
-                fullWidth
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                style={{ marginBottom: "10px", width: "50%" }}
-              />
-              <CustomButton value="Change Password" onClick={updatePassword} />
-            </Grid>
-          </Grid>
-          <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
-            <p>Add or delete identities</p>
-          </Grid>
-          <Typography>
-            You have {identities.length} identities associated with your account.
-            Your identities include:
-            <List>
-              {showIdentities}
-            </List>
-            Email cannot be removed from identities.
-          </Typography>
-          <Grid container spacing={3} marginTop={1}>
-            <Grid item xs={1}>
-              <CustomButton value="Link with Github" onClick={() => linkIdentity("github")} />
-              <CustomButton value="Link with Google" onClick={() => linkIdentity("google")} />
-              <CustomButton value="Link with Keycloak" onClick={() => linkIdentity("keycloak")} />
-              <CustomButton value="Unlink phone number" onClick={() => unlinkIdentity("phone")} />
-              <CustomButton value="Unlink Github" onClick={() => unlinkIdentity("github")} />
-              <CustomButton value="Unlink Google" onClick={() => unlinkIdentity("google")} />
-              <CustomButton value="Unlink Keycloak" onClick={() => unlinkIdentity("keycloak")} />
-            </Grid>
-          </Grid>
-          <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
-            <p>Enroll or unenroll MFA</p>
-          </Grid>
-          <Grid item xs={1}>
-            <EnrollMFA />
-            <p style={{ fontSize: 20 }}>Unenroll MFA</p>
-            <UnenrollMFA />
-            <p style={{ fontSize: 20 }}>App with MFA</p>
-            <AppWithMFA />
-            <p style={{ fontSize: 20 }}>Auth MFA</p>
-            <AuthMFA />
-          </Grid>
-          <CustomButton value="get AAL" onClick={getAal} />
+        <UpdateDetails getIdentities={getIdentities}/>
+        <IdentityManagement identities={identities} getIdentities={getIdentities}/>
+        <MfaManagement />
       </Paper>
-      <ToastContainer autoClose={4000} />
     </Container>
   )
 };

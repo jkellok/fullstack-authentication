@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { Typography, TextField, Table, TableHead, TableContainer, Paper, TableRow, TableCell, TableBody } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 const notification = (message, type) => {
     type ? toast[type](message) : toast(message)
@@ -18,6 +18,7 @@ const notification = (message, type) => {
 
 // onEnabled is a callback that notifies other components that enrollment has completed
 // onCancelled is a callback that notifies other components that user has clicked the Cancel button
+// not in use currently
 export function EnrollMFA({
     onEnrolled,
     onCancelled,
@@ -40,6 +41,7 @@ export function EnrollMFA({
         const challenge = await supabase.auth.mfa.challenge({ factorId })
         if (challenge.error) {
           setError(challenge.error.message)
+          notification(challenge.error.message, "error")
           throw challenge.error
         }
 
@@ -52,10 +54,11 @@ export function EnrollMFA({
         })
         if (verify.error) {
           setError(verify.error.message)
+          notification(verify.error.message, "error")
           throw verify.error
         }
 
-        //notification("MFA enabled!")
+        notification("MFA enabled!")
         onEnrolled()
       })()
     }
@@ -132,7 +135,6 @@ export function EnrollMFA({
               value="Cancel"
               onClick={onCancelled}
             />
-            <ToastContainer autoClose={4000} />
           </div>
       </>
     )
@@ -144,230 +146,216 @@ export function EnrollMFA({
  * the corresponding factor will be unenrolled.
  */
 export function UnenrollMFA() {
-    const [factorId, setFactorId] = useState('')
-    const [factors, setFactors] = useState([])
-    const [error, setError] = useState('') // holds an error message
-    const [showMfa, setShowMfa] = useState(false)
-    // delete later
-    const [allFactors, setAllFactors] = useState([])
+  const [factorId, setFactorId] = useState('')
+  const [factors, setFactors] = useState([])
+  const [error, setError] = useState('') // holds an error message
+  const [showMfa, setShowMfa] = useState(false)
+  // delete later
+  const [allFactors, setAllFactors] = useState([])
 
-    useEffect(() => {
-      ;(async () => {
-        const { data, error } = await supabase.auth.mfa.listFactors()
+  useEffect(() => {
+    ;(async () => {
+      const { data, error } = await supabase.auth.mfa.listFactors()
+      if (error) {
+        throw error
+      }
+      setFactors(data.totp)
+      setAllFactors(data.all)
+    })()
+  }, [])
+
+  const unenrollFactorId = async () => {
+    const { data, error } = await supabase.auth.mfa.unenroll({ factorId })
+    if (error) {
+      notification(error.message, "error")
+    } else {
+      notification(`${factorId} unenrolled!`, "info")
+      const factorsAfterUnenroll = factors.filter(f => f.id !== factorId)
+      setFactors(factorsAfterUnenroll)
+      /* unenrolling a factor will downgrade aal2 -> aal1 only after refresh interval has lapsed
+      for immediate downgrade, call refreshSession() manually */
+      await supabase.auth.refreshSession()
+    }
+  }
+
+  return (
+    <>
+      <Typography>
+        Unenroll MFA: Input Factor ID to unenroll MFA. You must have MFA enabled to do this.
+      </Typography>
+      <button
+        className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
+        onClick={() => setShowMfa(!showMfa)}
+      >
+        Unenroll MFA
+      </button>
+      <div className={showMfa ? 'visible' : 'hidden'}>
+        {error && <div className="error">{error}</div>}
+        <TableContainer component={Paper} sx={{ my: 2 }}>
+          <Table sx={{ minWidth: 650 }} aria-label="factor ID table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Factor ID</TableCell>
+                <TableCell>Friendly Name</TableCell>
+                <TableCell>Factor Type</TableCell>
+                <TableCell>Factor Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {factors.map((factor) => (
+                <TableRow key={factor.id}>
+                  <TableCell component="th" scope="row">
+                    {factor.id}
+                  </TableCell>
+                  <TableCell>{factor.friendly_name}</TableCell>
+                  <TableCell>{factor.factor_type}</TableCell>
+                  <TableCell>{factor.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TextField
+            label="Factor ID"
+            variant="outlined"
+            type="text"
+            helperText="Input the factor ID which you want to unenroll"
+            fullWidth
+            value={factorId}
+            onChange={(e) => setFactorId(e.target.value.trim())}
+            style={{ marginBottom: "10px", width: "50%" }}
+          />
+        <button
+          className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
+          onClick={() => unenrollFactorId()}
+        >
+          Unenroll
+        </button>
+      </div>
+    </>
+  )
+}
+
+export function AppWithMFA() {
+  const [readyToShow, setReadyToShow] = useState(false)
+  const [showMFAScreen, setShowMFAScreen] = useState(false)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
         if (error) {
           throw error
         }
-        console.log("unenroll data", data)
-        console.log("unenroll data.topt", data.totp)
-        setFactors(data.totp)
-        setAllFactors(data.all)
-      })()
-    }, [])
 
-    const unenrollFactorId = async () => {
-      const { data, error } = await supabase.auth.mfa.unenroll({ factorId })
-      if (error) {
-        //notification(error.message, "error")
-      } else {
-        //notification(`${factorId} unenrolled!`, "info")
-        const factorsAfterUnenroll = factors.filter(f => f.id !== factorId)
-        setFactors(factorsAfterUnenroll)
-        // unenrolling a factor will downgrade aal2 -> aal1 only after refresh interval has lapsed
-        // for immediate downgrade, call refreshSession() manually
-        //await supabase.auth.refreshSession()
+        console.log(data)
+
+        if (data.nextLevel === 'aal1') {
+          setShowMFAScreen(true)
+        }
+        else if (data.nextLevel === 'aal2' && data.nextLevel !== data.currentLevel) {
+          setShowMFAScreen(true)
+        }
+      } finally {
+        setReadyToShow(true)
       }
-    }
 
-    const clearAllFactors = async () => {
-      // just for testing
-      const factorIdsToRemove = allFactors.map(factor => {
-        return factor.id
+    })()
+  }, [])
+
+  const onSubmit = async () => {
+    // when user presses submit, check if aal levels changed
+    // set showMFAScreen to false if MFA successful
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    if (error) {
+      notification(error.message, "error")
+      throw error
+    }
+    if (data.currentLevel === 'aal1') {
+      notification("MFA not enabled")
+    }
+    else if (data.nextLevel === 'aal2' && data.currentLevel === 'aal2') {
+      setShowMFAScreen(false)
+      notification("Successfully enabled MFA!")
+    }
+  }
+
+  if (readyToShow) {
+    if (showMFAScreen) {
+      return <AuthMFA onSubmit={onSubmit}/>
+    }
+    return <p>You have MFA enabled!</p>
+  }
+
+  return <></>
+}
+
+export function AuthMFA({onSubmit}) {
+  const [verifyCode, setVerifyCode] = useState('')
+  const [error, setError] = useState('')
+
+  const onSubmitClicked = () => {
+    setError('')
+    ;(async () => {
+      const factors = await supabase.auth.mfa.listFactors()
+      if (factors.error) {
+        notification(factors.error.message, "error")
+        throw factors.error
+      }
+
+      const totpFactor = factors.data.totp[0]
+
+      if (!totpFactor) {
+        notification("No TOTP factors found!", "error")
+        throw new Error('No TOTP factors found!')
+      }
+
+      const factorId = totpFactor.id
+
+      const challenge = await supabase.auth.mfa.challenge({ factorId })
+      if (challenge.error) {
+        setError(challenge.error.message)
+        notification(challenge.error.message, "error")
+        throw challenge.error
+      }
+
+      const challengeId = challenge.data.id
+
+      const verify = await supabase.auth.mfa.verify({
+        factorId,
+        challengeId,
+        code: verifyCode,
       })
-      console.log("factors", factorIdsToRemove)
-      for (let i = 0; i < factorIdsToRemove.length; i++) {
-        const factorIdToRemove = factorIdsToRemove[i]
-        const { data, error } = await supabase.auth.mfa.unenroll({
-          factorId: factorIdToRemove
-        })
-        if (error) {
-          console.log("error in clearing all factors", error)
-        }
+      if (verify.error) {
+        setError(verify.error.message)
+        notification(verify.error.message, "error")
+        throw verify.error
       }
-      setFactors([])
-    }
 
-    return (
-      <>
-        <Typography>
-          Unenroll MFA: Input Factor ID to unenroll MFA. You must have MFA enabled to do this.
-        </Typography>
-        <button
-          className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-          onClick={() => setShowMfa(!showMfa)}
-        >
-          Unenroll MFA
-        </button>
-        <div className={showMfa ? 'visible' : 'hidden'}>
-          {error && <div className="error">{error}</div>}
-          <TableContainer component={Paper} sx={{ my: 2 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="factor ID table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Factor ID</TableCell>
-                  <TableCell>Friendly Name</TableCell>
-                  <TableCell>Factor Type</TableCell>
-                  <TableCell>Factor Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {factors.map((factor) => (
-                  <TableRow key={factor.id}>
-                    <TableCell component="th" scope="row">
-                      {factor.id}
-                    </TableCell>
-                    <TableCell>{factor.friendly_name}</TableCell>
-                    <TableCell>{factor.factor_type}</TableCell>
-                    <TableCell>{factor.status}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TextField
-              label="Factor ID"
-              variant="outlined"
-              type="text"
-              helperText="Input the factor ID which you want to unenroll"
-              fullWidth
-              value={factorId}
-              onChange={(e) => setFactorId(e.target.value.trim())}
-              style={{ marginBottom: "10px", width: "50%" }}
-           />
-          <button
-            className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-            onClick={() => unenrollFactorId()}
-          >
-            Unenroll
-          </button>
-          <button
-            className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-            onClick={() => clearAllFactors()}
-          >
-            Clear all factors (delete later?)
-          </button>
-          <ToastContainer autoClose={4000} />
-        </div>
-      </>
-    )
+      onSubmit()
+    })()
   }
 
-  export function AppWithMFA() {
-    const [readyToShow, setReadyToShow] = useState(false)
-    const [showMFAScreen, setShowMFAScreen] = useState(false)
-
-    useEffect(() => {
-      ;(async () => {
-        try {
-          const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-          if (error) {
-            throw error
-          }
-
-          console.log(data)
-
-          if (data.nextLevel === 'aal2' && data.nextLevel !== data.currentLevel) {
-            setShowMFAScreen(true)
-            console.log("set show mfa screen true")
-          }
-        } finally {
-            console.log("in finally")
-          setReadyToShow(true)
-        }
-
-      })()
-    }, [])
-
-    // check aal levels and set showMFAScreen to false
-/*     if (data.nextLevel === 'aal2' && data.nextLevel === data.currentLevel) {
-        setShowMFAScreen(false)
-      } */
-
-    if (readyToShow) {
-        console.log("in readytoshow")
-      if (showMFAScreen) {
-        console.log("in showmfascreen")
-        return <AuthMFA />
-      }
-      console.log("if showmfascreen is false")
-      return <p>You have MFA enabled!</p>
-    }
-
-    return <></>
-  }
-
-  export function AuthMFA() {
-    const [verifyCode, setVerifyCode] = useState('')
-    const [error, setError] = useState('')
-
-    const onSubmitClicked = () => {
-      setError('')
-      ;(async () => {
-        const factors = await supabase.auth.mfa.listFactors()
-        if (factors.error) {
-          throw factors.error
-        }
-
-        const totpFactor = factors.data.totp[0]
-
-        if (!totpFactor) {
-          throw new Error('No TOTP factors found!')
-        }
-
-        const factorId = totpFactor.id
-
-        const challenge = await supabase.auth.mfa.challenge({ factorId })
-        if (challenge.error) {
-          setError(challenge.error.message)
-          throw challenge.error
-        }
-
-        const challengeId = challenge.data.id
-
-        const verify = await supabase.auth.mfa.verify({
-          factorId,
-          challengeId,
-          code: verifyCode,
-        })
-        if (verify.error) {
-          setError(verify.error.message)
-          throw verify.error
-        }
-
-        //notification("Authenticated with MFA!")
-      })()
-    }
-
-    return (
-      <>
-        <div>Please enter the code from your authenticator app.</div>
-        {error && <div className="error">{error}</div>}
-        <TextField
-          label="Verification Code"
-          variant="outlined"
-          type="text"
-          helperText="Input the 6-digit code from your authenticator app"
-          fullWidth
-          value={verifyCode}
-          onChange={(e) => setVerifyCode(e.target.value.trim())}
-          style={{ marginBottom: "10px", width: "50%" }}
-        />
-        <input
-          className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-          type="button" value="Submit"
-          onClick={onSubmitClicked}
-        />
-        <ToastContainer autoClose={4000} />
-      </>
-    )
-  }
+  return (
+    <>
+      <div>Please enter the code from your authenticator app.</div>
+      {error && <div className="error">{error}</div>}
+      <TextField
+        label="Verification Code"
+        variant="outlined"
+        type="text"
+        helperText="Input the 6-digit code from your authenticator app"
+        fullWidth
+        value={verifyCode}
+        onChange={(e) => setVerifyCode(e.target.value.trim())}
+        style={{ marginBottom: "10px", width: "50%" }}
+      />
+      <input
+        className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
+        type="button" value="Submit"
+        onClick={onSubmitClicked}
+      />
+    </>
+  )
+}
 
