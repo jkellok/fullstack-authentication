@@ -4,6 +4,8 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
+import { AppWithMFA } from "./MfaComponents";
+import { ToastContainer } from "react-toastify";
 
 const Button = ({ value, onClick }) => {
   return (
@@ -128,6 +130,10 @@ const LoginSupabase = () => {
         <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
         <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
         <Button value="To User Management" onClick={() => handleClick("/usermanagement")} />
+        <div className="bg-[white]">
+          <AppWithMFA />
+        </div>
+        {/* <ToastContainer autoClose={4000} /> */}
       </div>
     );
   }

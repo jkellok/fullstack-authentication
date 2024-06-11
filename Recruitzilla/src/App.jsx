@@ -12,6 +12,7 @@ import TestPage from "./components/TestPage";
 import FirstLoginPage from "./components/FirstLoginPage";
 import UserManagement from "./components/UserManagement";
 import StudentDashboard from "./components/StudentDashboard";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
+          <ToastContainer autoClose={4000} />
         </main>
       </BrowserRouter>
     </AuthProvider>
