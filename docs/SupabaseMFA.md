@@ -25,7 +25,8 @@ Supabase Auth provides:
 - List Factors API
 
 Here's a chart illustrating how these APIs work together.
-![Flow chart of Supabase MFA APIs](/pictures/supabase-mfa-apis.png)
+
+![Flow chart of Supabase MFA APIs](docs/pictures/supabase-mfa-apis.png)
 
 Supabase Auth adds additional metadata to user's access token (JWT) that application can use to allow or deny access.
 
@@ -69,7 +70,7 @@ To enroll:
 NOTE: Currently other parts (Unenroll MFA, Test MFA) do not update when you enroll  
 NOTE: If you want to test MFA, you need to login again to get your AAL back to aal1
 
-![Enrolling MFA](/pictures/enroll-mfa.png)
+![Enrolling MFA](docs/pictures/enroll-mfa.png)
 
 To unenroll:
 1. Click "Unenroll MFA" to open up a table of factors and input field
@@ -79,7 +80,7 @@ To unenroll:
 NOTE: You have to have aal2 to unenroll  
 NOTE: By default user will retain aal2, you need to use supabase.auth.refreshSession() if you want to immediately change it to aal1
 
-![Unenrolling MFA](/pictures/unenroll-mfa.png)
+![Unenrolling MFA](docs/pictures/unenroll-mfa.png)
 
 To test MFA:
 1. Open authenticator app to get the TOTP
@@ -88,15 +89,15 @@ To test MFA:
 
 NOTE: You need to currently have aal1 and you have enrolled MFA (ie. AAL next level is aal2)
 
-![Test MFA](/pictures/test-mfa.png)
+![Test MFA](docs/pictures/test-mfa.png)
 
 ### Graphs
 
 Enrolling MFA
 
-![Graph of MFA enroll](/graphs/MfaEnroll.png)
+![Graph of MFA enroll](docs/graphs/MfaEnroll.png)
 
 How MFA could be used to login
 
-![Graph of MFA login](/graphs/MfaLogin.png)  
+![Graph of MFA login](docs/graphs/MfaLogin.png)  
 (Currently we don't ask for MFA right after logging in to authorize access)
