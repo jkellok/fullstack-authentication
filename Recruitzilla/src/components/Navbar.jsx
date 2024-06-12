@@ -4,8 +4,7 @@ import { Link as ScrollLink, Element } from "react-scroll";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import * as Scroll from "react-scroll";
 import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
-import { useSession } from "../hooks/useSession";
+import { useAuth } from "./context/AuthContext";
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -15,7 +14,11 @@ const Navbar = () => {
   const location = path.split("/")[1];
   const navigate = useNavigate();
   const scroller = Scroll.scroller;
-  const session = useSession();
+  const {
+    session,
+    role,
+    logout
+  } = useAuth();
 
   const handleNav = () => {
     setNav(!nav);
@@ -54,6 +57,22 @@ const Navbar = () => {
     });
   };
 
+  const goToPageByRole = async () => {
+    switch(role) {
+      case "student":
+        await navigate("/student-console")
+        break;
+      case "recruiter":
+        await navigate("/app/filter")
+        break;
+      case "admin":
+        await navigate("admin-console")
+        break;
+      default:
+        await navigate("/login/supabase")
+    }
+  }
+
   return (
     <>
       <div
@@ -70,7 +89,7 @@ const Navbar = () => {
                 </h1>
               </button>
             </Link>
-            {location !== "login" ? (
+            {location === "" ? (
               <ul className="hidden md:flex">
                 <ScrollLink to="home" spy={true} smooth={true}>
                   <button className="p-4 text-bold hover:bg-[#323236] rounded-md">
@@ -88,9 +107,28 @@ const Navbar = () => {
                   </button>
                 </ScrollLink>
                 {session ? (
-                  <NavLink to="/login/supabase" spy={true} smooth={true}>
-                    <LogoutButton />
-                  </NavLink>
+                  <>
+                    <button
+                      onClick={() => goToPageByRole()}
+                      className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    >
+                      My Console
+                    </button>
+                    <button
+                      onClick={() => navigate("/usermanagement")}
+                      className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    >
+                      Settings
+                    </button>
+                    <NavLink to="/" spy={true} smooth={true}>
+                      <button
+                        className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
+                        onClick={logout}
+                        >
+                        Logout
+                      </button>
+                    </NavLink>
+                  </>
                 ) : (
                   <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
@@ -120,9 +158,28 @@ const Navbar = () => {
                   Contact
                 </button>
                 {session ? (
-                  <NavLink to="/login/supabase" spy={true} smooth={true}>
-                    <LogoutButton />
-                  </NavLink>
+                  <>
+                    <button
+                      onClick={() => goToPageByRole()}
+                      className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    >
+                      My Console
+                    </button>
+                    <button
+                      onClick={() => navigate("/usermanagement")}
+                      className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    >
+                      Settings
+                    </button>
+                    <NavLink to="/" spy={true} smooth={true}>
+                      <button
+                        className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
+                        onClick={logout}
+                        >
+                        Logout
+                      </button>
+                    </NavLink>
+                  </>
                 ) : (
                   <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
@@ -165,7 +222,26 @@ const Navbar = () => {
               </ScrollLink>
               {session ? (
                 <li className="p-4 border-b border-gray-600">
-                  <LogoutButton />
+                  <button
+                    onClick={() => goToPageByRole()}
+                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                  >
+                    My Console
+                  </button>
+                  <button
+                    onClick={() => navigate("/usermanagement")}
+                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                  >
+                    Settings
+                  </button>
+                  <NavLink to="/" spy={true} smooth={true}>
+                    <button
+                      className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
+                      onClick={logout}
+                      >
+                      Logout
+                    </button>
+                  </NavLink>
                 </li>
               ) : (
                 <li className="p-4 border-b border-gray-600">
