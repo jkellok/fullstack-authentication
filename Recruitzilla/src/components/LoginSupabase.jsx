@@ -20,80 +20,87 @@ const Button = ({ value, onClick }) => {
 };
 
 const TokenForm = () => {
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [tokenSent, setTokenSent] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [tokenSent, setTokenSent] = useState(false);
 
-  const sendTokenToPhone = () => {
-    const { data, error } = supabase.auth.signInWithOtp({
-      "phone": phoneNumber,
+  const sendTokenToPhone = async () => {
+    const { error } = await supabase.auth.signInWithOtp({
+      phone: phoneNumber,
       options: {
-        // user will not be automatically signed up
         shouldCreateUser: false
       }
-    })
+    });
     if (error) {
-      console.log("error", error)
+      console.log("error", error);
     } else {
-      setTokenSent(true)
+      setTokenSent(true);
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center">
-      {!tokenSent ?
-      <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-3/4 flex flex-col justify-center items-center">
-        <label className="block text-gray-700 text-m mb-2" htmlFor="phone">
-          Send a token to your phone to login
-        </label>
-        <input
-          className='p-3 flex w-full rounded-md text-black border-black border'
-          type='phone'
-          id="phone"
-          placeholder='Your phone number'
-          onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-        <p className="mt-5 text-sm">
-          You can use this if you have set your phone number with your account
-        </p>
-        <Button value="Send Token" onClick={sendTokenToPhone}>Send token</Button>
-      </div>
-      :
-      <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-500 flex flex-col justify-center items-center">
-        Verify your token
-        <Auth
-          supabaseClient={supabase}
-          appearance={{
-            theme: ThemeSupa,
-            style: {
-              button: { color: "black" },
-            },
-          }}
-          magicLink={true}
-          otpType="sms"
-          view="verify_otp"
-        />
-        <Button value="Send again?" onClick={() => setTokenSent(false)}/>
-      </div>
-      }
+      {!tokenSent ? (
+        <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-3/4 flex flex-col justify-center items-center">
+          <label className="block text-gray-700 text-m mb-2" htmlFor="phone">
+            Send a token to your phone to login
+          </label>
+          <input
+            className='p-3 flex w-full rounded-md text-black border-black border'
+            type='phone'
+            id="phone"
+            placeholder='Your phone number'
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <p className="mt-5 text-sm">
+            You can use this if you have set your phone number with your account
+          </p>
+          <Button value="Send Token" onClick={sendTokenToPhone}>Send token</Button>
+        </div>
+      ) : (
+        <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-500 flex flex-col justify-center items-center">
+          Verify your token
+          <Auth
+            supabaseClient={supabase}
+            appearance={{
+              theme: ThemeSupa,
+              style: {
+                button: { color: "black" },
+              },
+            }}
+            magicLink={true}
+            otpType="sms"
+            view="verify_otp"
+          />
+          <Button value="Send again?" onClick={() => setTokenSent(false)} />
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 const LoginSupabase = () => {
   const {
     session,
+    role,
     loginWithKeycloak,
     loginAnonymously,
     logout,
     redirectNewUser,
+    redirectBasedOnRole,
   } = useAuth();
   const navigate = useNavigate();
 
-  const handleClick = (path) => {
-    navigate(path);
-  };
+  useEffect(() => {
+    if (session) {
+      (async () => {
+        await redirectNewUser(navigate);
+        redirectBasedOnRole(navigate);
+      })();
+    }
+  }, [session, redirectNewUser, redirectBasedOnRole, navigate]);
 
-  console.log("session", session)
+  console.log("session", session);
+  console.log("role", role);
 
   if (!session) {
     return (
@@ -121,7 +128,6 @@ const LoginSupabase = () => {
       </div>
     );
   } else {
-    redirectNewUser(navigate);
     return (
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
@@ -133,7 +139,7 @@ const LoginSupabase = () => {
         <div className="bg-[white]">
           <AppWithMFA />
         </div>
-        {/* <ToastContainer autoClose={4000} /> */}
+          {/* <ToastContainer autoClose={4000} /> */}
       </div>
     );
   }
