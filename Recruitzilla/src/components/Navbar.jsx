@@ -20,8 +20,6 @@ const Navbar = () => {
     logout
   } = useAuth();
 
-  console.log("role", role)
-
   const handleNav = () => {
     setNav(!nav);
   };
