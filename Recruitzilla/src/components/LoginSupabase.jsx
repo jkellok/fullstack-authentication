@@ -4,8 +4,6 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
-import { AppWithMFA } from "./MfaComponents";
-import { ToastContainer } from "react-toastify";
 
 const Button = ({ value, onClick }) => {
   return (
@@ -70,6 +68,7 @@ const TokenForm = () => {
             magicLink={true}
             otpType="sms"
             view="verify_otp"
+            redirectTo="http://localhost:5173/login/supabase"
           />
           <Button value="Send again?" onClick={() => setTokenSent(false)} />
         </div>
@@ -82,9 +81,6 @@ const LoginSupabase = () => {
   const {
     session,
     role,
-    loginWithKeycloak,
-    loginAnonymously,
-    logout,
     redirectNewUser,
     redirectBasedOnRole,
   } = useAuth();
@@ -107,9 +103,8 @@ const LoginSupabase = () => {
       <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <div className="flex flex-col justify-center items-center w-3/4">
           <div className="flex justify-center items-center">
-            <Button value="Log in with Keycloak" onClick={loginWithKeycloak} />
             <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-1/2 flex flex-col justify-center items-center">
-              Log in with Supabase
+              <p>Log in</p>
               <Auth
                 supabaseClient={supabase}
                 appearance={{
@@ -120,6 +115,10 @@ const LoginSupabase = () => {
                 }}
                 providers={["google", "github", "linkedin", "keycloak"]}
                 magicLink={true}
+                redirectTo="http://localhost:5173/login/supabase"
+                queryParams={{
+                  scopes: "openid"
+                }}
               />
             </div>
             <TokenForm />
@@ -129,17 +128,9 @@ const LoginSupabase = () => {
     );
   } else {
     return (
-      <div className="bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
+      <div className="text-white bg-[#1e1f1f] flex flex-col justify-center items-center h-screen">
         <h1>Logged in!</h1>
-        <Button value="Log out" onClick={logout} />
-        <Button value="To previous Login page" onClick={() => handleClick("/login")} />
-        <Button value="To First Login Form" onClick={() => handleClick("/firstlogin")} />
-        <Button value="To TestPage with test data" onClick={() => handleClick("/testpage")} />
-        <Button value="To User Management" onClick={() => handleClick("/usermanagement")} />
-        <div className="bg-[white]">
-          <AppWithMFA />
-        </div>
-          {/* <ToastContainer autoClose={4000} /> */}
+        <p>Redirecting...</p>
       </div>
     );
   }
