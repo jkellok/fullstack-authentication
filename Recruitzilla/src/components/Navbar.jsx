@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { Link as ScrollLink, Element } from "react-scroll";
+import { Link as ScrollLink } from "react-scroll";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import * as Scroll from "react-scroll";
 import { Link } from "react-router-dom";
@@ -14,11 +14,7 @@ const Navbar = () => {
   const location = path.split("/")[1];
   const navigate = useNavigate();
   const scroller = Scroll.scroller;
-  const {
-    session,
-    role,
-    logout
-  } = useAuth();
+  const { session, role, logout } = useAuth();
 
   const handleNav = () => {
     setNav(!nav);
@@ -58,20 +54,20 @@ const Navbar = () => {
   };
 
   const goToPageByRole = async () => {
-    switch(role) {
+    switch (role) {
       case "student":
-        await navigate("/student-console")
+        await navigate("/student-console");
         break;
       case "recruiter":
-        await navigate("/app/filter")
+        await navigate("/app/filter");
         break;
       case "admin":
-        await navigate("admin-console")
+        await navigate("admin-console");
         break;
       default:
-        await navigate("/login/supabase")
+        await navigate("/login/supabase");
     }
-  }
+  };
 
   return (
     <>
@@ -124,7 +120,7 @@ const Navbar = () => {
                       <button
                         className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
                         onClick={logout}
-                        >
+                      >
                         Logout
                       </button>
                     </NavLink>
@@ -175,7 +171,7 @@ const Navbar = () => {
                       <button
                         className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
                         onClick={logout}
-                        >
+                      >
                         Logout
                       </button>
                     </NavLink>
@@ -206,45 +202,47 @@ const Navbar = () => {
             </h1>
             <ul>
               <ScrollLink to="home" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Home</button>
+                <li className="p-4 border-b hover:bg-[#64748b] border-gray-600 bg-slate-400 cursor-pointer">
+                  Home
                 </li>
               </ScrollLink>
               <ScrollLink to="company" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Company</button>
+                <li className="p-4 border-b hover:bg-[#64748b] border-gray-600 bg-slate-400 cursor-pointer">
+                  Company
                 </li>
               </ScrollLink>
               <ScrollLink to="contact" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Contact</button>
+                <li className="p-4 border-b hover:bg-[#64748b] border-gray-600 bg-slate-400 cursor-pointer">
+                  Contact
                 </li>
               </ScrollLink>
               {session ? (
-                <li className="p-4 border-b border-gray-600">
-                  <button
+                <>
+                  <li
                     onClick={() => goToPageByRole()}
-                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    className="p-4 border-b hover:bg-[#64748b] border-gray-600 bg-slate-400 cursor-pointer"
                   >
                     My Console
-                  </button>
-                  <button
+                  </li>
+                  <li
                     onClick={() => navigate("/usermanagement")}
-                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    className="p-4 border-b hover:bg-[#64748b] border-gray-600 bg-slate-400 cursor-pointer"
                   >
                     Settings
-                  </button>
-                  <NavLink to="/" spy={true} smooth={true}>
-                    <button
-                      className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
-                      onClick={logout}
+                  </li>
+                  <li className="p-4 border-b border-gray-600 bg-slate-400 cursor-pointer">
+                    <NavLink to="/" spy={true} smooth={true}>
+                      <button
+                        className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-full h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
+                        onClick={logout}
                       >
-                      Logout
-                    </button>
-                  </NavLink>
-                </li>
+                        Logout
+                      </button>
+                    </NavLink>
+                  </li>
+                </>
               ) : (
-                <li className="p-4 border-b border-gray-600">
+                <li className="p-4 border-b border-gray-600 bg-slate-400 cursor-pointer">
                   <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-full text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
                       Login
@@ -256,7 +254,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className="navbar-placeholder h-24"></div>{" "}
+      <div className="navbar-placeholder h-24"></div>
       {/* Placeholder Element */}
     </>
   );
