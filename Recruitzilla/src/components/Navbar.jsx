@@ -206,45 +206,52 @@ const Navbar = () => {
             </h1>
             <ul>
               <ScrollLink to="home" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Home</button>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
+                  <button className="w-full text-left">Home</button>
                 </li>
               </ScrollLink>
               <ScrollLink to="company" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Company</button>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
+                  <button className="w-full text-left">Company</button>
                 </li>
               </ScrollLink>
               <ScrollLink to="contact" spy={true} smooth={true}>
-                <li className="p-4 border-b border-gray-600">
-                  <button>Contact</button>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
+                  <button
+                  className="w-full text-left">Contact</button>
                 </li>
               </ScrollLink>
               {session ? (
-                <li className="p-4 border-b border-gray-600">
+                <ul>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
                   <button
-                    onClick={() => goToPageByRole()}
-                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    onClick={() => goToPageByRole()} 
+                    className="w-full text-left"
                   >
                     My Console
                   </button>
+                </li>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
                   <button
                     onClick={() => navigate("/usermanagement")}
-                    className="p-4 text-bold hover:bg-[#323236] rounded-md"
+                    className="w-full text-left"
                   >
                     Settings
                   </button>
+                </li>
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
                   <NavLink to="/" spy={true} smooth={true}>
                     <button
-                      className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-[95px] h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
+                      className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-full h-[50px] text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black"
                       onClick={logout}
-                      >
+                    >
                       Logout
                     </button>
                   </NavLink>
                 </li>
+                </ul>
               ) : (
-                <li className="p-4 border-b border-gray-600">
+                <li className="p-4 border-b border-gray-600 bg-slate-400">
                   <NavLink to="/login/supabase" spy={true} smooth={true}>
                     <button className="bg-[#00df9a] text-bold hover:bg-[#00B27B] w-full text-bold hover:bg-[#00B27B] rounded-md font-small py-4 text-black">
                       Login
