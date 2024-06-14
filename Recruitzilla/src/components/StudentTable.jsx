@@ -55,9 +55,6 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
                     <IconButton onClick={() => onEditStudent(student)}>
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => onDeleteStudent(student.id)}>
-                      <Delete />
-                    </IconButton>
                   </TableCell>
                 </TableRow>
                 <TableRow>

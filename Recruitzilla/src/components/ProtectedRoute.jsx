@@ -10,13 +10,13 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   if (!session) {
-    return <Navigate to="/" />;
+    return <Navigate to="/"/>;
   }
 
   return allowedRoles.includes(role) ? (
     <Outlet />
   ) : (
-    <Navigate to="/" />
+    <Navigate to="/"/>
   );
 };
 
