@@ -164,6 +164,7 @@ const AdminConsole = () => {
         console.error("Error deleting user:", error);
       } else {
         await fetchAndSetUsers();
+        await fetchAndSetStudents();
       }
     } catch (error) {
       console.error("Error deleting user:", error);
