@@ -109,11 +109,7 @@ const AdminConsole = () => {
     }
   };
 
-  const handleAddUser = () => {
-    setSelectedUser(null);
-    setOpenUserDialog(true);
-  };
-
+ 
   const handleEditUser = (user) => {
     console.log("Editing user:", user);
     setSelectedUser(user);
@@ -168,6 +164,7 @@ const AdminConsole = () => {
         console.error("Error deleting user:", error);
       } else {
         await fetchAndSetUsers();
+        await fetchAndSetStudents();
       }
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -281,12 +278,7 @@ const AdminConsole = () => {
     setOpenUserDialog(true);
   };
 
-  const handleDeleteStudent = (studentId) => {
-    setStudents(students.filter((student) => student.id !== studentId));
-    setFilteredStudents(
-      filteredStudents.filter((student) => student.id !== studentId)
-    );
-  };
+
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -299,11 +291,12 @@ const AdminConsole = () => {
     } else {
       setFilteredUsers(
         users.filter((user) =>
-          user.name.toLowerCase().includes(event.target.value.toLowerCase())
+          user.name && user.name.toLowerCase().includes(event.target.value.toLowerCase())
         )
       );
     }
   };
+  
 
   const handleStudentSearchChange = (event) => {
     setStudentSearchQuery(event.target.value);
@@ -334,7 +327,7 @@ const AdminConsole = () => {
 
 
   return (
-    <><p>testi</p><Container style={{ marginTop: "50px" }}>
+    <><Container style={{ marginTop: "50px" }}>
       <Paper style={{ padding: "40px", margin: "50px 50px 0 50px" }}>
         <Tabs
           value={tabValue}
@@ -356,12 +349,6 @@ const AdminConsole = () => {
                 value={userSearchQuery}
                 onChange={handleUserSearchChange}
                 style={{ marginBottom: "20px" }} />
-              <button
-                className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black hover:bg-[#00B27B] text-bold hover:bg-[#00B27B]"
-                onClick={handleAddUser}
-              >
-                Add User
-              </button>
               <UserTable
                 users={filteredUsers}
                 onEditUser={handleEditUser}
@@ -387,8 +374,7 @@ const AdminConsole = () => {
               <StudentTable
                 students={filteredStudents}
                 courses={courses}
-                onEditStudent={handleEditStudent}
-                onDeleteStudent={handleDeleteStudent} />
+                onEditStudent={handleEditStudent} />
             </Grid>
           </Grid>
         </TabPanel>

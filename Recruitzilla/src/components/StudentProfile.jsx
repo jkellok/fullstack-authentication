@@ -240,58 +240,25 @@ const StudentProfile = ({ profileData, updateProfile }) => {
               </CardContent>
             </Card>
           </Grid>
+          <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            
+          </Grid>
+          <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box sx={{ textAlign: 'right', mt: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setEditMode(true)}
+                sx={{ backgroundColor: "#00B27B" }}
+              >
+                Edit
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
         </Grid>
       )}
-      <Box sx={{ textAlign: 'right', mt: 2 }}>
-        <Button variant="contained" color="primary" onClick={() => setEditMode(true)} sx={{ backgroundColor: "#00B27B" }}>
-          Edit
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => setPasswordDialogOpen(true)} sx={{ backgroundColor: "#00B27B", ml: 2 }}>
-          Change Password
-        </Button>
-      </Box>
-
-      {/* Change Password Dialog */}
-      <Dialog open={passwordDialogOpen} onClose={() => setPasswordDialogOpen(false)}>
-        <DialogTitle>Change Password</DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              type="password"
-              label="Current Password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              type="password"
-              label="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              type="password"
-              label="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            {passwordMessage && <Typography color="error">{passwordMessage}</Typography>}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handlePasswordChange} color="primary" sx={{ backgroundColor: "#00B27B" }}>
-            Change Password
-          </Button>
-          <Button onClick={() => setPasswordDialogOpen(false)} color="primary" sx={{ backgroundColor: "#00B27B" }}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Paper>
   );
 };
