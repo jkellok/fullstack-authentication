@@ -3,6 +3,7 @@ import { ListItem, List, Container, Grid, Paper, TextField, Typography } from "@
 import { supabase } from "../supabaseClient";
 import { toast } from 'react-toastify'
 import { EnrollMFA, UnenrollMFA, AppWithMFA } from "./MfaComponents";
+import { useAuth } from "./context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -27,6 +28,11 @@ const UpdateDetails = ({ getIdentities }) => {
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
 
+  const { session } = useAuth();
+  const currentEmail = session?.user.email
+  // could hide email, eg. tes***@tes***.com
+
+  // how should this work with keycloak and social providers?
   // sends "confirm email change" email to new email address
   const updateEmailTo = async () => {
     const { data, error } = await supabase.auth.updateUser({
@@ -74,6 +80,9 @@ const UpdateDetails = ({ getIdentities }) => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12}>
+        <Typography>
+          Your current email is {currentEmail}. Here you can change your email.
+        </Typography>
         <TextField
           label="New Email Address"
           variant="outlined"
@@ -199,13 +208,33 @@ const IdentityManagement = ({ identities, getIdentities }) => {
 }
 
 const MfaManagement = () => {
+  const [factors, setFactors] = useState([])
+
+  const onEnrolled = () => {
+    console.log("enrolled!")
+    updateFactors()
+  }
+
+  const onCancelled = () => {
+    notification("Cancelled enrolling MFA", "info")
+  }
+
+  const updateFactors = async () => {
+    console.log("updating factors")
+    const { data, error } = await supabase.auth.mfa.listFactors()
+    if (error) {
+      throw error
+    }
+    setFactors(data.totp)
+  }
+
   return (
     <>
       <Grid item xs={1}>
-        <EnrollMFA />
-        <UnenrollMFA />
+        <EnrollMFA onEnrolled={onEnrolled} onCancelled={onCancelled} />
+        <UnenrollMFA factors={factors} setFactors={setFactors} />
         <Typography>
-          Test MFA
+          Upgrade to AAL2
         </Typography>
         <AppWithMFA />
       </Grid>
