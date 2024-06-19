@@ -13,6 +13,7 @@ import UserTable from "./UserTable";
 import StudentTable from "./StudentTable";
 import CourseTable from "./CourseTable";
 import UserDialog from "./UserDialog";
+import StudentDialog from "./StudentDialog";
 import CourseDialog from "./CourseDialog";
 import FilterPanel from "./FilterPanel";
 import { supabase } from "../supabaseClient";
@@ -32,6 +33,9 @@ const AdminConsole = () => {
   const [userSearchQuery, setUserSearchQuery] = useState("");
   const [studentSearchQuery, setStudentSearchQuery] = useState("");
   const [courseSearchQuery, setCourseSearchQuery] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [openStudentDialog, setOpenStudentDialog] = useState(false);
+
 
   useEffect(() => {
     fetchAndSetStudents();
@@ -164,6 +168,7 @@ const AdminConsole = () => {
         console.error("Error deleting user:", error);
       } else {
         await fetchAndSetUsers();
+        await fetchAndSetStudents();
       }
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -264,7 +269,7 @@ const AdminConsole = () => {
               )
             )) &&
           (!filters.gradYears.length ||
-            filters.gradYears.includes(student.expected_graduate_year)) &&
+            filters.gradYears.includes(student.expected_graduation_year)) &&
           (!filters.grades.length ||
             filters.grades.includes(Math.round(avgGrade)))
         );
@@ -273,10 +278,40 @@ const AdminConsole = () => {
   };
 
   const handleEditStudent = (student) => {
-    setSelectedUser(student);
-    setOpenUserDialog(true);
+    setSelectedStudent(student);
+    setOpenStudentDialog(true);
   };
 
+  const handleSaveStudent = async (student) => {
+    console.log("Saving student:", student);
+  
+    if (!student.id) {
+      console.error("Error: Student ID is undefined");
+      return;
+    }
+  
+    const { error: updateError } = await supabase
+      .from("students")
+      .update({
+        name: student.name,
+        bio: student.bio,
+        nationality: student.nationality,
+        phone_number: student.phone_number,
+        skills: student.skills,
+        languages: student.languages,
+        expected_graduation_year: student.expected_graduation_year,
+      })
+      .eq("id", student.id);
+  
+    if (updateError) {
+      console.error("Error updating student:", updateError);
+      return;
+    }
+  
+    await fetchAndSetStudents();
+    setOpenStudentDialog(false); 
+  };
+  
 
 
   const handleTabChange = (event, newValue) => {
@@ -360,7 +395,8 @@ const AdminConsole = () => {
             <Grid item xs={12} md={4}>
               <FilterPanel
                 onFilterChange={handleFilterChange}
-                courses={courses} />
+                courses={courses}
+                students={students} />
             </Grid>
             <Grid item xs={12} md={8}>
               <TextField
@@ -412,6 +448,13 @@ const AdminConsole = () => {
         course={selectedCourse}
         onClose={() => setOpenCourseDialog(false)}
         onSave={handleSaveCourse} />
+      <StudentDialog
+        open={openStudentDialog}
+        student={selectedStudent}
+        courses={courses}
+        onClose={() => setOpenStudentDialog(false)}
+        onSave={handleSaveStudent}
+      />
     </Container></>
   );
 };

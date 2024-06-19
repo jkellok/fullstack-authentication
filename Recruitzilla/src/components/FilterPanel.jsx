@@ -1,15 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paper, Checkbox, FormControlLabel, FormGroup, Typography } from "@mui/material";
 
-const skills = ["Java", "NodeJS", "Python", "C++", "AWS", "React"];
-const gradYears = [2022, 2023, 2024, 2025, 2026, 2027];
-const grades = [1, 2, 3, 4, 5];
-
-const FilterPanel = ({ onFilterChange, courses }) => {
+const FilterPanel = ({ onFilterChange, courses, students }) => {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedGradYears, setSelectedGradYears] = useState([]);
   const [selectedGrades, setSelectedGrades] = useState([]);
+
+  const [skills, setSkills] = useState([]);
+  const [gradYears, setGradYears] = useState([]);
+
+  useEffect(() => {
+    const allSkills = new Set();
+    const allGradYears = new Set();
+
+    students.forEach((student) => {
+      student.skills.forEach((skill) => {
+        allSkills.add(skill);
+      });
+      allGradYears.add(student.expected_graduation_year);
+    });
+
+    setSkills([...allSkills]);
+    setGradYears([...allGradYears].sort());
+  }, [students]);
 
   const handleSkillChange = (skill) => {
     setSelectedSkills((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
@@ -70,7 +84,7 @@ const FilterPanel = ({ onFilterChange, courses }) => {
       </FormGroup>
       <FormGroup>
         <Typography variant="h6">Filter by Average Grade</Typography>
-        {grades.map((grade) => (
+        {[1, 2, 3, 4, 5].map((grade) => (
           <FormControlLabel
             key={grade}
             control={<Checkbox checked={selectedGrades.includes(grade)} onChange={() => handleGradeChange(grade)} />}
