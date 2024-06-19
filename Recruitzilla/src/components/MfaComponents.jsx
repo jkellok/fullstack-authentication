@@ -31,10 +31,6 @@ export function EnrollMFA({
     const [secret, setSecret] = useState('')
     const [showSecret, setShowSecret] = useState(false)
 
-    useEffect(() => {
-      enrollMfa()
-    }, [])
-
     const onEnableClicked = () => {
       setError('')
       ;(async () => {
@@ -66,10 +62,11 @@ export function EnrollMFA({
     const enrollMfa = async () => {
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
-        //friendlyName: 'authzilla',    // must be unique
         issuer: 'authzilla.ilab.fi'
       })
       if (error) {
+        setError(error.message)
+        notification(error.message, "error")
         throw error
       }
 
@@ -82,6 +79,11 @@ export function EnrollMFA({
       setSecret(data.totp.secret)
     }
 
+    const toggleEnrollMfaButton = () => {
+      if (!showMfa) enrollMfa()
+      setShowMfa(!showMfa)
+    }
+
     return (
       <>
       <Typography>
@@ -89,7 +91,7 @@ export function EnrollMFA({
       </Typography>
       <button
         className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
-        onClick={() => setShowMfa(!showMfa)}
+        onClick={() => toggleEnrollMfaButton()}
       >
         Enroll MFA
       </button>
@@ -193,7 +195,6 @@ export function UnenrollMFA() {
             <TableHead>
               <TableRow>
                 <TableCell>Factor ID</TableCell>
-                <TableCell>Friendly Name</TableCell>
                 <TableCell>Factor Type</TableCell>
                 <TableCell>Factor Status</TableCell>
               </TableRow>
@@ -204,7 +205,6 @@ export function UnenrollMFA() {
                   <TableCell component="th" scope="row">
                     {factor.id}
                   </TableCell>
-                  <TableCell>{factor.friendly_name}</TableCell>
                   <TableCell>{factor.factor_type}</TableCell>
                   <TableCell>{factor.status}</TableCell>
                 </TableRow>

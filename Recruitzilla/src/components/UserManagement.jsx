@@ -4,6 +4,8 @@ import { supabase } from "../supabaseClient";
 import { toast } from 'react-toastify'
 import { EnrollMFA, UnenrollMFA, AppWithMFA } from "./MfaComponents";
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
 const notification = (message, type) => {
   type ? toast[type](message) : toast(message)
 }
@@ -30,7 +32,7 @@ const UpdateDetails = ({ getIdentities }) => {
     const { data, error } = await supabase.auth.updateUser({
       email: newEmail,
       options: {
-        emailRedirectTo: 'http://localhost:5173/login/supabase'
+        emailRedirectTo: `${baseUrl}/login/supabase`
       }
     })
     if (error) {
@@ -128,7 +130,7 @@ const IdentityManagement = ({ identities, getIdentities }) => {
     const { data, error } = await supabase.auth.linkIdentity({
       provider: provider,
       options: {
-        redirectTo: "http://localhost:5173/usermanagement"
+        redirectTo: `${baseUrl}/usermanagement`
       }
     })
     if (error) {
@@ -197,12 +199,6 @@ const IdentityManagement = ({ identities, getIdentities }) => {
 }
 
 const MfaManagement = () => {
-
-  const getAal = async () => {
-    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-    console.log("aal data", data)
-  }
-
   return (
     <>
       <Grid item xs={1}>
@@ -213,7 +209,6 @@ const MfaManagement = () => {
         </Typography>
         <AppWithMFA />
       </Grid>
-      <CustomButton value="get AAL levels (delete later)" onClick={getAal} />
     </>
   )
 }

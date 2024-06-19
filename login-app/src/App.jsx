@@ -3,8 +3,6 @@ import keycloak from './keycloak'
 import { supabase } from './supabaseClient'
 import { useEffect, useState } from 'react'
 
-// Keycloak client uses localhost:5174
-
 const Projects = () => {
   const projects = [
     {
@@ -62,7 +60,7 @@ const SupabaseLoginComponent = () => {
       provider: "keycloak",
       options: {
         scopes: "openid",
-        redirectTo: "http://localhost:5174",
+        redirectTo: import.meta.env.VITE_BASE_URL,
       },
     });
     if (error) console.log("Error logging in:", error.message);
