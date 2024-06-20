@@ -159,7 +159,7 @@ export function EnrollMFA({ onEnrolled, onCancelled }) {
  * When a user types in the factorId of the factor that they wish to unenroll and clicks unenroll
  * the corresponding factor will be unenrolled.
  */
-export function UnenrollMFA({factors, setFactors}) {
+export function UnenrollMFA({ factors, setFactors, onUnenrolled }) {
   const [factorId, setFactorId] = useState('')
   const [error, setError] = useState('') // holds an error message
   const [showMfa, setShowMfa] = useState(false)
@@ -187,13 +187,14 @@ export function UnenrollMFA({factors, setFactors}) {
       /* unenrolling a factor will downgrade aal2 -> aal1 only after refresh interval has lapsed
       for immediate downgrade, call refreshSession() manually */
       await supabase.auth.refreshSession()
+      onUnenrolled()
     }
   }
 
   return (
     <>
       <Typography>
-        Unenroll MFA: Input Factor ID to unenroll MFA. You must have MFA enabled to do this.
+        Unenroll MFA: Input Factor ID to unenroll MFA. You must have AAL2 level to do this.
       </Typography>
       <button
         className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
@@ -250,7 +251,7 @@ export function UnenrollMFA({factors, setFactors}) {
   )
 }
 
-export function AppWithMFA() {
+export function AppWithMFA({ showRequest, setShowRequest }) {
   const [readyToShow, setReadyToShow] = useState(false)
   const [showMFAScreen, setShowMFAScreen] = useState(false)
 
@@ -264,16 +265,21 @@ export function AppWithMFA() {
 
         if (data.nextLevel === 'aal1') {
           setShowMFAScreen(true)
+          setShowRequest(true)
         }
         else if (data.nextLevel === 'aal2' && data.nextLevel !== data.currentLevel) {
           setShowMFAScreen(true)
+          setShowRequest(false)
+        }
+        else if (data.nextLevel === 'aal2') {
+          setShowRequest(false)
         }
       } finally {
         setReadyToShow(true)
       }
     }
     checkAalLevel()
-  }, [])
+  }, [setShowRequest])
 
   const onSubmit = async () => {
     // when user presses submit, check if aal levels changed
@@ -291,6 +297,8 @@ export function AppWithMFA() {
       notification("Successfully enabled MFA!")
     }
   }
+
+  if (showRequest) return <p>Please enroll MFA first!</p>
 
   if (readyToShow) {
     if (showMFAScreen) {
