@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
+import { breadcrumbsClasses } from "@mui/material";
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       provider: "keycloak",
       options: {
         scopes: "openid",
-        redirectTo: "http://localhost:5173/login/supabase", // change later for production
+        redirectTo: `${baseUrl}/login/supabase`,
       },
     });
     if (error) console.log("Error logging in:", error.message);

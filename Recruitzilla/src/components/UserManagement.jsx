@@ -3,15 +3,18 @@ import { ListItem, List, Container, Grid, Paper, TextField, Typography } from "@
 import { supabase } from "../supabaseClient";
 import { toast } from 'react-toastify'
 import { EnrollMFA, UnenrollMFA, AppWithMFA } from "./MfaComponents";
+import { useAuth } from "./context/AuthContext";
+
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const notification = (message, type) => {
   type ? toast[type](message) : toast(message)
 }
 
-const CustomButton = ({ value, onClick }) => {
+const CustomButton = ({ value, onClick, type }) => {
   return (
     <button
-      type="button"
+      type={type}
       onClick={onClick}
       className="bg-[#00df9a] w-[190px] rounded-md font-medium mx-auto py-3 text-black mx-6 my-1"
     >
@@ -25,12 +28,18 @@ const UpdateDetails = ({ getIdentities }) => {
   const [newPhone, setNewPhone] = useState('')
   const [newPassword, setNewPassword] = useState('')
 
+  const { session } = useAuth();
+  const currentEmail = session?.user.email
+  // could hide email, eg. tes***@tes***.com
+
+  // how should this work with keycloak and social providers?
   // sends "confirm email change" email to new email address
-  const updateEmailTo = async () => {
+  const updateEmailTo = async (event) => {
+    event.preventDefault()
     const { data, error } = await supabase.auth.updateUser({
       email: newEmail,
       options: {
-        emailRedirectTo: 'http://localhost:5173/login/supabase'
+        emailRedirectTo: `${baseUrl}/login/supabase`
       }
     })
     if (error) {
@@ -43,7 +52,8 @@ const UpdateDetails = ({ getIdentities }) => {
     }
   }
   // sends OTP to new phone number
-  const updatePhone = async () => {
+  const updatePhone = async (event) => {
+    event.preventDefault()
     // add nicer phone input form?
     const { data, error } = await supabase.auth.updateUser({
       phone: newPhone
@@ -57,7 +67,8 @@ const UpdateDetails = ({ getIdentities }) => {
     getIdentities()
   }
 
-  const updatePassword = async () => {
+  const updatePassword = async (event) => {
+    event.preventDefault()
     const { data, error } = await supabase.auth.updateUser({
       password: newPassword
     })
@@ -72,42 +83,51 @@ const UpdateDetails = ({ getIdentities }) => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12}>
-        <TextField
-          label="New Email Address"
-          variant="outlined"
-          type="email"
-          helperText="A confirmation email will be sent to your new email address"
-          fullWidth
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
-          style={{ marginBottom: "10px", width: "50%" }}
-        />
-        <CustomButton value="Change Email Address" onClick={updateEmailTo} />
+        <Typography>
+          Your current email is {currentEmail}. Here you can change your email.
+        </Typography>
+        <form onSubmit={updateEmailTo}>
+          <TextField
+            label="New Email Address"
+            variant="outlined"
+            type="email"
+            helperText="A confirmation email will be sent to your new email address"
+            fullWidth
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            style={{ marginBottom: "10px", width: "50%" }}
+          />
+          <CustomButton value="Change Email Address" type="submit" />
+        </form>
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          label="New Phone Number"
-          variant="outlined"
-          helperText="Add a phone number to use Phone OTP login"
-          fullWidth
-          value={newPhone}
-          onChange={(e) => setNewPhone(e.target.value)}
-          style={{ marginBottom: "10px", width: "50%" }}
-        />
-        <CustomButton value="Change Phone" onClick={updatePhone} />
+        <form onSubmit={updatePhone}>
+          <TextField
+            label="New Phone Number"
+            variant="outlined"
+            helperText="Add a phone number to use Phone OTP login"
+            fullWidth
+            value={newPhone}
+            onChange={(e) => setNewPhone(e.target.value)}
+            style={{ marginBottom: "10px", width: "50%" }}
+          />
+          <CustomButton value="Change Phone" type="submit" />
+        </form>
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          label="New Password"
-          variant="outlined"
-          type="password"
-          helperText="Password must be at least 6 characters long"
-          fullWidth
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          style={{ marginBottom: "10px", width: "50%" }}
-        />
-        <CustomButton value="Change Password" onClick={updatePassword} />
+        <form onSubmit={updatePassword}>
+          <TextField
+            label="New Password"
+            variant="outlined"
+            type="password"
+            helperText="Password must be at least 6 characters long"
+            fullWidth
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            style={{ marginBottom: "10px", width: "50%" }}
+          />
+          <CustomButton value="Change Password" type="submit" />
+        </form>
       </Grid>
     </Grid>
   )
@@ -128,7 +148,7 @@ const IdentityManagement = ({ identities, getIdentities }) => {
     const { data, error } = await supabase.auth.linkIdentity({
       provider: provider,
       options: {
-        redirectTo: "http://localhost:5173/usermanagement"
+        redirectTo: `${baseUrl}/usermanagement`
       }
     })
     if (error) {
@@ -170,7 +190,7 @@ const IdentityManagement = ({ identities, getIdentities }) => {
       <Grid sx={{ textTransform: 'uppercase', fontWeight: 'bold', fontSize: 'h5.fontSize', marginBottom: '10px', marginTop: '20px' }}>
         <p>Add or delete identities</p>
       </Grid>
-      <Typography>
+      <Typography component={'span'}>
         You have {identities.length} identities associated with your account.
         Your identities include:
         <List>
@@ -197,23 +217,41 @@ const IdentityManagement = ({ identities, getIdentities }) => {
 }
 
 const MfaManagement = () => {
+  const [factors, setFactors] = useState([])
+  const [showRequest, setShowRequest] = useState(true)
 
-  const getAal = async () => {
-    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-    console.log("aal data", data)
+  const onEnrolled = () => {
+    updateFactors()
+    setShowRequest(false)
+    // or store aal levels here and update
+  }
+
+  const onCancelled = () => {
+    notification("Cancelled enrolling MFA", "info")
+  }
+
+  const onUnenrolled = () => {
+    setShowRequest(true)
+  }
+
+  const updateFactors = async () => {
+    const { data, error } = await supabase.auth.mfa.listFactors()
+    if (error) {
+      throw error
+    }
+    setFactors(data.totp)
   }
 
   return (
     <>
       <Grid item xs={1}>
-        <EnrollMFA />
-        <UnenrollMFA />
+        <EnrollMFA onEnrolled={onEnrolled} onCancelled={onCancelled} />
+        <UnenrollMFA factors={factors} setFactors={setFactors} onUnenrolled={onUnenrolled} />
         <Typography>
-          Test MFA
+          Upgrade to AAL2
         </Typography>
-        <AppWithMFA />
+        <AppWithMFA showRequest={showRequest} setShowRequest={setShowRequest} />
       </Grid>
-      <CustomButton value="get AAL levels (delete later)" onClick={getAal} />
     </>
   )
 }

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "../supabaseClient";
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
 const Button = ({ value, onClick }) => {
   return (
     <button
@@ -68,7 +70,7 @@ const TokenForm = () => {
             magicLink={true}
             otpType="sms"
             view="verify_otp"
-            redirectTo="http://localhost:5173/login/supabase"
+            redirectTo={`${baseUrl}/login/supabase`}
           />
           <Button value="Send again?" onClick={() => setTokenSent(false)} />
         </div>
@@ -115,7 +117,7 @@ const LoginSupabase = () => {
                 }}
                 providers={["google", "github", "linkedin", "keycloak"]}
                 magicLink={true}
-                redirectTo="http://localhost:5173/login/supabase"
+                redirectTo={`${baseUrl}/login/supabase`}
                 queryParams={{
                   scopes: "openid"
                 }}
