@@ -13,6 +13,7 @@ const Login = ({ setToken }) => {
         password,
       });
       setToken(response.data.token);
+      localStorage.setItem("token", response.data.token);
       alert("Logged in successfully");
     } catch (error) {
       alert("Error logging in");

@@ -37,6 +37,9 @@ const CountriesTable = ({ token, refreshTable }) => {
       }
     };
 
+    const checkToken = () => {
+      console.log(token)
+    }
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
@@ -69,6 +72,7 @@ const CountriesTable = ({ token, refreshTable }) => {
           ))}
         </tbody>
       </table>
+      <button onClick={checkToken}>TESTI</button>
     </div>
   );
 };
