@@ -7,7 +7,7 @@ This document explains the backup setup for Keycloak on the Pouta server, includ
 /var/backups/keycloak
 
 ## Backup Script
-The backup script is located in the CMDB: cmdb/backup.sh
+The backup script is located in the CMDB: cmdb/keycloak-server/backup.sh
 
 ## Systemd Service
 The systemd service unit file is located at: /etc/systemd/system/keycloak-backup.service
