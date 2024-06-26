@@ -4,6 +4,7 @@ import { supabase } from "../supabaseClient";
 import { toast } from 'react-toastify'
 import { EnrollMFA, UnenrollMFA, AppWithMFA } from "./MfaComponents";
 import { useAuth } from "./context/AuthContext";
+import DeleteAccount from "./DeleteAccount";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -256,6 +257,7 @@ const MfaManagement = () => {
   )
 }
 
+
 const UserManagement = () => {
   const [identities, setIdentities] = useState([])
 
@@ -284,6 +286,7 @@ const UserManagement = () => {
         <UpdateDetails getIdentities={getIdentities}/>
         <IdentityManagement identities={identities} getIdentities={getIdentities}/>
         <MfaManagement />
+        <DeleteAccount />
       </Paper>
     </Container>
   )
