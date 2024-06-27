@@ -177,7 +177,6 @@ const StudentDialog = ({ setSelectedStudent, selectedStudent, courses }) => {
                   </Box>
 
                   <Box
-                  
                     border={2}
                     p={2}
                     mt={2}
@@ -485,20 +484,22 @@ const StudentDialog = ({ setSelectedStudent, selectedStudent, courses }) => {
                   </Grid>
 
                   {/* Skills */}
-                  {selectedStudent.skills.map((skill) => (
-                    <Chip
-                      key={skill}
-                      label={skill}
-                      marginTop={"3vh"}
-                      style={{
-                        backgroundColor: "lightblue",
-                        color: "navy",
-                        fontSize: "14px",
-                        margin: "4px",
-                        // More styles here
-                      }}
-                    />
-                  ))}
+                  {selectedStudent.skills
+                    .filter((skill) => skill.trim() !== "")
+                    .map((skill) => (
+                      <Chip
+                        key={skill}
+                        label={skill}
+                        marginTop={"3vh"}
+                        style={{
+                          backgroundColor: "lightblue",
+                          color: "navy",
+                          fontSize: "14px",
+                          margin: "4px",
+                          // More styles here
+                        }}
+                      />
+                    ))}
                 </Box>
               </Grid>
             </Grid>

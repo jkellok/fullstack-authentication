@@ -117,10 +117,15 @@ function App() {
 
   const allSkills = new Set();
   students.forEach((student) => {
-    student.skills.forEach((skill) => {
-      allSkills.add(skill);
-    });
+    if (student.skills) {
+      student.skills.forEach((skill) => {
+        if (skill !== "") {
+          allSkills.add(skill);
+        }
+      });
+    }
   });
+
 
   const fetchAndSetStudents = async () => {
     const { data, error } = await supabase
@@ -157,7 +162,9 @@ function App() {
   const uniqueGradYears = new Set();
 
   students.forEach((student) => {
-    uniqueGradYears.add(student.expected_graduation_year);
+    if (student.expected_graduation_year !== null) {
+      uniqueGradYears.add(student.expected_graduation_year);
+    }
 
     const avgGrade =
       student.list_of_courses.reduce((acc, curr) => acc + curr.grade, 0) /

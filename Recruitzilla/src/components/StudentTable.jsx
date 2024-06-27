@@ -1,8 +1,29 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Paper, Typography, Box, Collapse, List, ListItem, ListItemText, Button } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Paper,
+  Typography,
+  Box,
+  Collapse,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+} from "@mui/material";
 import { Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 
-const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => {
+const StudentTable = ({
+  students,
+  courses,
+  onEditStudent,
+  onDeleteStudent,
+}) => {
   const [openRows, setOpenRows] = useState({});
 
   const handleRowClick = (studentId) => {
@@ -31,9 +52,16 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
         <TableBody>
           {students.map((student) => {
             const avgGrade = (
-              student.list_of_courses.reduce((acc, curr) => acc + curr.grade, 0) /
-              student.list_of_courses.length
+              student.list_of_courses.reduce(
+                (acc, curr) => acc + curr.grade,
+                0
+              ) / student.list_of_courses.length
             ).toFixed(1);
+
+            const filteredSkills = student.skills.filter(
+              (skill) => skill !== ""
+            ); 
+
             return (
               <React.Fragment key={student.id}>
                 <TableRow>
@@ -48,7 +76,7 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
                   </TableCell>
                   <TableCell>{student.name}</TableCell>
                   <TableCell>{student.email}</TableCell>
-                  <TableCell>{student.skills.join(", ")}</TableCell>
+                  <TableCell>{filteredSkills.join(", ")}</TableCell>
                   <TableCell>{student.expected_graduation_year}</TableCell>
                   <TableCell>{avgGrade}</TableCell>
                   <TableCell>
@@ -58,8 +86,15 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                    <Collapse in={openRows[student.id]} timeout="auto" unmountOnExit>
+                  <TableCell
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                    colSpan={7}
+                  >
+                    <Collapse
+                      in={openRows[student.id]}
+                      timeout="auto"
+                      unmountOnExit
+                    >
                       <Box margin={1}>
                         <Typography variant="h6" gutterBottom component="div">
                           Courses
@@ -67,7 +102,9 @@ const StudentTable = ({ students, courses, onEditStudent, onDeleteStudent }) => 
                         <List>
                           {student.list_of_courses.map((course) => (
                             <ListItem key={course.id}>
-                              <ListItemText primary={getCourseName(course.id)} />
+                              <ListItemText
+                                primary={getCourseName(course.id)}
+                              />
                             </ListItem>
                           ))}
                         </List>
