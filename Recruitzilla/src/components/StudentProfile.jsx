@@ -24,7 +24,23 @@ import { supabase } from "../supabaseClient"; // Import Supabase client
 
 // Options for languages and skills
 const languagesOptions = ["English", "Finnish", "Swedish", "Spanish"];
-const skillsOptions = ["Java", "C++", "React", "Python", "HTML", "CSS"];
+const skillsOptions = [
+  "Frontend",
+  "AWS",
+  "C++",
+  "Github",
+  "HTML",
+  "Python",
+  "Bash scripting",
+  "NodeJS",
+  "React",
+  "Databases",
+  "Mobile Development",
+  "Backend",
+  "IoT",
+  "Linux",
+  "Java",
+];
 const graduationYears = Array.from({ length: 31 }, (_, i) => 2000 + i);
 
 const StudentProfile = ({ profileData, updateProfile }) => {

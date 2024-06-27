@@ -59,7 +59,23 @@ const StudentDialog = ({ open, student, courses, onClose, onSave }) => {
         <Autocomplete
           multiple
           id="skills"
-          options={["Java", "NodeJS", "Python", "C++", "AWS", "React"]}
+          options={[
+            "Frontend",
+            "AWS",
+            "C++",
+            "Github",
+            "HTML",
+            "Python",
+            "Bash scripting",
+            "NodeJS",
+            "React",
+            "Databases",
+            "Mobile Development",
+            "Backend",
+            "IoT",
+            "Linux",
+            "Java",
+          ]}
           freeSolo
           value={formData.skills}
           onChange={(event, newValue) => {
@@ -67,11 +83,20 @@ const StudentDialog = ({ open, student, courses, onClose, onSave }) => {
           }}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
-              <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+              <Chip
+                variant="outlined"
+                label={option}
+                {...getTagProps({ index })}
+              />
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} variant="outlined" label="Skills" placeholder="Skills" />
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Skills"
+              placeholder="Skills"
+            />
           )}
         />
         <Autocomplete
@@ -79,17 +104,28 @@ const StudentDialog = ({ open, student, courses, onClose, onSave }) => {
           id="courses"
           options={courses}
           getOptionLabel={(option) => option.name}
-          value={formData.courses.map(course => courses.find(c => c.id === course.id) || course)}
+          value={formData.courses.map(
+            (course) => courses.find((c) => c.id === course.id) || course
+          )}
           onChange={(event, newValue) => {
             setFormData({ ...formData, courses: newValue });
           }}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
-              <Chip variant="outlined" label={option.name} {...getTagProps({ index })} />
+              <Chip
+                variant="outlined"
+                label={option.name}
+                {...getTagProps({ index })}
+              />
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} variant="outlined" label="Courses" placeholder="Courses" />
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Courses"
+              placeholder="Courses"
+            />
           )}
         />
         <TextField
