@@ -47,8 +47,12 @@ const StudentProfile = ({ profileData, updateProfile }) => {
   useEffect(() => {
     setFormData({
       ...profileData,
-      languages: Array.isArray(profileData.languages) ? profileData.languages : [],
-      skills: Array.isArray(profileData.skills) ? profileData.skills : []
+      languages: Array.isArray(profileData.languages)
+        ? profileData.languages
+        : [],
+      skills: Array.isArray(profileData.skills)
+        ? profileData.skills.filter((skill) => skill.trim() !== "")
+        : [],
     });
   }, [profileData]);
 

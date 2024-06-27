@@ -295,7 +295,7 @@ const handleEnroll = async (selectedCourses) => {
                   <TableCell>Course</TableCell>
                   <TableCell align="right">Grade</TableCell>
                   <TableCell align="right">Credits</TableCell>
-                  <TableCell align="right">Actions</TableCell> {/* New Column for Actions */}
+                  <TableCell align="right">Actions</TableCell> 
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -304,8 +304,8 @@ const handleEnroll = async (selectedCourses) => {
                     <TableCell>{course.name}</TableCell>
                     <TableCell align="right">{course.grade}</TableCell>
                     <TableCell align="right">{course.credits}</TableCell>
-                    <TableCell align="right"> {/* Action Cell */}
-                      <IconButton onClick={() => handleDeleteCourse(course.id)}> {/* Call handleDeleteCourse */}
+                    <TableCell align="right"> 
+                      <IconButton onClick={() => handleDeleteCourse(course.id)}> 
                         <Delete />
                       </IconButton>
                     </TableCell>

@@ -16,9 +16,13 @@ const FilterPanel = ({ onFilterChange, courses, students }) => {
 
     students.forEach((student) => {
       student.skills.forEach((skill) => {
-        allSkills.add(skill);
+        if (skill !== "") {
+          allSkills.add(skill);
+        }
       });
+      if (student.expected_graduation_year !== null) {
       allGradYears.add(student.expected_graduation_year);
+      }
     });
 
     setSkills([...allSkills]);
