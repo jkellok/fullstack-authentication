@@ -14,9 +14,7 @@ Refer to the [documentation](/docs) for more information.
 Base for the app is [Recruitzilla](https://recruitzilla.ilab.fi/), which is also available on [GitHub](ttps://github.com/Dialex2006/TAMK-student-catalog-2023).
 
 ## Demo
-(add video(s) here)
-
-(add some screenshots?)
+![Authzilla user demo](/docs/videos/AuthzillaDemoCompr.mp4)
 
 ## Installation
 - Ensure that you have at least Node v.18.18.2 installed  
