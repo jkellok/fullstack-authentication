@@ -1,8 +1,22 @@
-# React + Vite
+# Login App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+A simple app to test and demo logging in Keycloak client that shares the same realm with supabase client that is used in Recruitzilla.
 
-Currently, two official plugins are available:
+This app uses keycloak-js adapter, which automatically checks for authenticated user and can authenticate the user from another client to login-app client. Using logout will log out user from all Keycloak sessions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The app is deployed on a Pouta server at https://www.loginapp.ilab.fi
+
+## Demo
+![Screenshot of login app](docs/pictures/login-app.png)
+![Demo video of login app](docs/videos/LoginappDemo.mp4)
+
+## Installation
+- Git glone this project
+- Move to login-app folder
+- Install dependencies (npm install)
+- Run in development mode (npm run dev)
+    - Should run in port 5174 (Keycloak client configured to allow localhost:5174)
+
+## Further information
+You can read a more detailed documentation about this app in [/docs/keycloak-login-app.md](../docs/keycloak-login-app.md).
