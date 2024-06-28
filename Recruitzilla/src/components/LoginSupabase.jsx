@@ -52,6 +52,9 @@ const TokenForm = () => {
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
           <p className="mt-5 text-sm">
+            <strong>NOTE: Due to Twilio trial account, only one phone number works with this!</strong>
+          </p>
+          <p className="mt-5 text-sm">
             You can use this if you have set your phone number with your account
           </p>
           <Button value="Send Token" onClick={sendTokenToPhone}>Send token</Button>
