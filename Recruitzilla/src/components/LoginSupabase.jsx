@@ -7,10 +7,10 @@ import { supabase } from "../supabaseClient";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-const Button = ({ value, onClick }) => {
+const Button = ({ value, onClick, type }) => {
   return (
     <button
-      type="button"
+      type={type}
       onClick={onClick}
       className="bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black mx-1"
     >
@@ -23,7 +23,8 @@ const TokenForm = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [tokenSent, setTokenSent] = useState(false);
 
-  const sendTokenToPhone = async () => {
+  const sendTokenToPhone = async (event) => {
+    event.preventDefault();
     const { error } = await supabase.auth.signInWithOtp({
       phone: phoneNumber,
       options: {
@@ -41,23 +42,25 @@ const TokenForm = () => {
     <div className="flex justify-center items-center">
       {!tokenSent ? (
         <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-3/4 flex flex-col justify-center items-center">
-          <label className="block text-gray-700 text-m mb-2" htmlFor="phone">
-            Send a token to your phone to login
-          </label>
-          <input
-            className='p-3 flex w-full rounded-md text-black border-black border'
-            type='phone'
-            id="phone"
-            placeholder='Your phone number'
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-          <p className="mt-5 text-sm">
-            <strong>NOTE: Due to Twilio trial account, only one phone number works with this!</strong>
-          </p>
-          <p className="mt-5 text-sm">
-            You can use this if you have set your phone number with your account
-          </p>
-          <Button value="Send Token" onClick={sendTokenToPhone}>Send token</Button>
+          <form onSubmit={sendTokenToPhone} className="flex flex-col justify-center items-center">
+            <label className="block text-gray-700 text-m mb-2" htmlFor="phone">
+              Send a token to your phone to login
+            </label>
+            <input
+              className='p-3 flex w-full rounded-md text-black border-black border'
+              type='phone'
+              id="phone"
+              placeholder='Your phone number'
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            <p className="mt-5 text-sm">
+              <strong>NOTE: Due to Twilio trial account, only one phone number works with this!</strong>
+            </p>
+            <p className="mt-5 text-sm">
+              You can use this if you have set your phone number with your account
+            </p>
+            <Button value="Send Token" type="submit">Send token</Button>
+          </form>
         </div>
       ) : (
         <div className="bg-white rounded-md px-4 py-3 mx-3 text-black w-500 flex flex-col justify-center items-center">
@@ -75,7 +78,7 @@ const TokenForm = () => {
             view="verify_otp"
             redirectTo={`${baseUrl}/login/supabase`}
           />
-          <Button value="Send again?" onClick={() => setTokenSent(false)} />
+          <Button value="Send again?" onClick={() => setTokenSent(false)} type="button" />
         </div>
       )}
     </div>
@@ -126,7 +129,30 @@ const LoginSupabase = () => {
                 }}
               />
             </div>
-            <TokenForm />
+            <div className="flex flex-col justify-center items-center">
+            {/* Email OTP login, didn't get it working, requires OTP token to be added in Supabase email template */}
+              {/*<div className="bg-white rounded-md px-4 py-3 mx-3 mb-5 text-black w-1/2 flex flex-col justify-center items-center">
+                <p className="block text-gray-700 text-m mb-2">
+                  Email OTP login
+                </p>
+                <Auth
+                  supabaseClient={supabase}
+                  appearance={{
+                    theme: ThemeSupa,
+                    style: {
+                      button: { color: "black" },
+                    },
+                  }}
+                  redirectTo={`${baseUrl}/login/supabase`}
+                  otpType="EmailOtpType"
+                  view="verify_otp"
+                />
+                <p className="mt-5 text-sm">
+                  If you ask for a magic link to your email, you can also use the OTP to login
+                </p>
+              </div> */}
+              <TokenForm />
+            </div>
           </div>
         </div>
       </div>
